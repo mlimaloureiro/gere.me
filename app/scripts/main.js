@@ -17,5 +17,6 @@ $(document).ready(function () {
     gereMe.init();
 
     new gereMe.Routers.RouteRouter();
+    
     Backbone.history.start();
 });

@@ -12,10 +12,12 @@ gereMe.Routers.RouteRouter = Backbone.Router.extend({
 
 	initialize: function() {
 		console.log('router initted');
-		new gereMe.Views.ClientesView();
-		new gereMe.Views.DespesasView();
-		new gereMe.Views.PainelView();
-		new gereMe.Views.ServicosView();
+		
+		this.ClientesView = new gereMe.Views.ClientesView();
+		this.DespesasView = new gereMe.Views.DespesasView();
+		this.PainelView = new gereMe.Views.PainelView();
+		this.ServicosView = new gereMe.Views.ServicosView();
+		
 	},
 
 	index: function() {
@@ -23,10 +25,20 @@ gereMe.Routers.RouteRouter = Backbone.Router.extend({
 	},
 
 	painel: function() {
+		this.PainelView.show();
+	},
 
+	despesas: function() {
+		this.DespesasView.show();
+	},
+
+	clientes: function() {
+		this.PainelView.show();
+	},
+
+	servicos: function() {
+		this.ServicosView.show();
 	}
-
-
 
 
 });

@@ -1,0 +1,89 @@
+<div class="widget-header">
+	<h4 class="lighter smaller">
+		<i class="icon-rss orange"></i>
+		RECENTE
+	</h4>
+
+	<div class="widget-toolbar no-border">
+		<ul class="nav nav-tabs" id="recent-tab">
+			<li class="active">
+				<a data-toggle="tab" href="#receitas-tab-widget">Receitas</a>
+			</li>
+
+			<li>
+				<a data-toggle="tab" href="#despesas-tab-widget">Despesas</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div class="widget-body">
+	<div class="widget-main padding-4">
+		<div class="tab-content padding-8 overflow-visible">
+			<div id="receitas-tab-widget" class="tab-pane active">
+				<h4 class="smaller lighter green">
+					<i class="icon-list"></i>
+					Lista de receitas relevantes
+				</h4>
+
+				<ul id="receitas-line" class="contas-line item-list ui-sortable">
+					<li class="item-green clearfix">
+						<label class="inline">
+							<input type="checkbox" class="ace">
+							<span class="lbl"> sunati.com <span style="color:#a6a6a6;"> a receber 500.00 €</span> </span> 
+						</label>
+						<div class="inline pull-right position-relative">
+							<span style="color:#a6a6a6;"> até 07-Set</span>
+						</div>
+					</li>
+
+					<li class="item-green clearfix">
+						<label class="inline">
+							<input type="checkbox" class="ace">
+							<span class="lbl"> flyers <span style="color:#a6a6a6;"> a receber 220.00 €</span></span>
+						</label>
+						<div class="inline pull-right position-relative">
+							<span style="color:#a6a6a6;"> até 21-Set</span>
+						</div>
+					</li>
+				</ul>
+				<p>
+					<button class="btn btn-link btn-block">Ver todas</button>
+				</p>
+			</div>
+
+			<div id="despesas-tab-widget" class="tab-pane">
+				<h4 class="smaller lighter red">
+					<i class="icon-list"></i>
+					Lista de despesas relevantes
+				</h4>
+
+				<ul id="despesas-line" class="contas-line item-list ui-sortable">
+					<li class="item-red clearfix">
+						<label class="inline">
+							<input type="checkbox" class="ace">
+							<span class="lbl"> ordenado xpto <span style="color:#a6a6a6;"> a pagar 1020.00 €</span> </span>
+						</label>
+						<div class="inline pull-right position-relative">
+							<span style="color:#a6a6a6;"> até 08-Set</span>
+						</div>
+					</li>
+
+					<li class="item-red clearfix">
+						<label class="inline">
+							<input type="checkbox" class="ace">
+							<span class="lbl"> tinteiros <span style="color:#a6a6a6;"> a pagar 80.00 €</span> </span>
+						</label>
+						<div class="inline pull-right position-relative">
+							<span style="color:#a6a6a6;"> até 08-Set</span>
+						</div>
+					</li>
+				</ul>
+				<p>
+					<button class="btn btn-link btn-block">Ver todas</button>
+				</p>
+			</div>
+
+		</div>
+	</div><!--/widget-main-->
+</div><!--/widget-body-->
