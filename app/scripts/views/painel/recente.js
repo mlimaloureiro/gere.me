@@ -15,6 +15,7 @@ gereMe.Views.RecenteView = Backbone.View.extend({
 
     render: function() {
     	$('#recent-box').html(this.template());
+        return this;
     },
 
     initHook: function() {

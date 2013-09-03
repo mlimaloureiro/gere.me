@@ -4,21 +4,37 @@ gereMe.Views.PainelView = Backbone.View.extend({
 
     template: JST['app/scripts/templates/painel.ejs'],
     loaded: false,
-    events: { },
+
+    events: { 
+        'click .add_nova_receita' : 'toggleForm'
+    },
+
     el: '#painel-page-js',
+
     initialize: function() {
         console.log("[PainelView] Created.");
+        this.el = '#painel-page-js';
+
         if(!this.loaded) {
             this.load();
         }
+
+    },
+
+    toggleForm: function() {
+        console.log('toggling form');
+        $('#nova-receita-form').show();
     },
 
     render: function() {
-    
-        $('#page').html(this.template());
-        var recente = new gereMe.Views.RecenteView();
-        var piechart = new gereMe.Views.PiechartView();
-        var insercaorapida = new gereMe.Views.InsercaorapidaView();
+        if(!this.loaded) {
+            $('#page').append(this.template());
+            this.recente = new gereMe.Views.RecenteView();
+            this.piechart = new gereMe.Views.PiechartView();
+            this.insercaorapida = new gereMe.Views.InsercaorapidaView();
+        }
+
+        this.delegateEvents();
     },
 
     load: function() {

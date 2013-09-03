@@ -5,7 +5,8 @@ gereMe.Views.InsercaorapidaView = Backbone.View.extend({
     template: JST['app/scripts/templates/insercaorapida.ejs'],
 
     /*global gereMe, Backbone, JST*/
-    events: { },
+   
+
     el: '#insercaorapida-box',
     
     initialize: function() {
@@ -16,7 +17,8 @@ gereMe.Views.InsercaorapidaView = Backbone.View.extend({
     },
 
     render: function() {
-    	$('#insercaorapida-box').html(this.template());
+   		$('#insercaorapida-box').html(this.template());
+   		return this;
     },
 
     initHook: function() {
@@ -36,7 +38,7 @@ gereMe.Views.InsercaorapidaView = Backbone.View.extend({
 				$('.recorrente-form').hide();
 			}
 		});
-
+		$('#nova-receita-form').hide();
 		$('[data-rel="tooltip"]').tooltip({placement: this.tooltip_placement});
     },
 

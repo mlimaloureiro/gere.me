@@ -13,11 +13,37 @@ gereMe.Views.DespesasView = Backbone.View.extend({
     	}
     },
 
-    render: function() {},
+    render: function() {
+        if(!this.loaded) {
+            /* create sub views */
+            var despesas = [];
+            
+            for(var i = 0; i <= 2000; i++) {
+                despesas.push({'nome': 'logotipo','valor' :'100€','servico':'Design','date' : '31-08-2013', 'estado' : 'Pago'});
+            }
+
+
+            $('#page').append(this.template({despesas: despesas}));
+        }
+
+        return this;
+
+    },
+
+    initHook: function() {
+        var oTable1 = $('#despesas-table').dataTable( {
+                            "aoColumns": [
+                              { "bSortable": false },
+                              null, null,null, null, null,
+                              { "bSortable": false }
+                            ] } );
+    },
 
     load: function() {
-    	this.loaded = true;
-    	console.log('[DespesasView] Loaded.');
+        this.render();
+        this.initHook();
+        this.loaded = true;
+        console.log('[DespesasView] Loaded.');
     },
 
     unload: function() {
@@ -26,11 +52,11 @@ gereMe.Views.DespesasView = Backbone.View.extend({
     },
 
     show: function() {
-
+        $('#despesas-page-js').show();
     },
 
     hide: function() {
-    	
+        $('#despesas-page-js').hide();
     }
 
 });

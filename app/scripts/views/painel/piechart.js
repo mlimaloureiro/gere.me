@@ -14,6 +14,7 @@ gereMe.Views.PiechartView = Backbone.View.extend({
 
     render: function() {
     	$('#pie-chart-box').html(this.template());
+    	return this;
     },
 
     initHook: function() {
