@@ -11,10 +11,17 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     	console.log("[ReceitasView] Created.");
         _.bindAll(this,'togglePago');
     	if(!this.loaded) {
-            this.receitasList = new gereMe.Collections.ReceitasCollection();
-            this.receitasList.on('reset', this.render, this);
-            this.receitasList.on('change', this.render, this);
-            this.receitasList.on('add', this.render, this);
+
+            gereMe.receitasList.on('reset', this.render, this);
+            gereMe.receitasList.on('change', this.render, this);
+            gereMe.receitasList.on('add', this.render, this);
+
+            gereMe.clientesList.on('add', this.render, this);
+            gereMe.servicosList.on('add', this.render, this);
+            
+            gereMe.servicosList.on('remove', this.render, this);
+            gereMe.clientesList.on('remove', this.render, this);
+
     	}
     },
 
@@ -23,15 +30,15 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         if(!this.loaded) {
             /* create sub views */
 
-            $('#page').append(this.template({receitas: this.receitasList}));
+            $('#page').append(this.template({receitas:gereMe.receitasList}));
             this.loaded = true;
             this.initHook();
 
             console.log('[ReceitasView] Loaded.');
-        } else {
+        } 
 
-
-        }
+        this.renderClientes();
+        this.renderServicos();
 
         $('#receitas-stats-areceber').html(estatisticas.areceber + ' €');
         $('#receitas-stats-porpagar').html(estatisticas.porpagar + ' €');
@@ -40,8 +47,27 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
         $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
     
-        console.log(this.receitasList);
         return this;
+    },
+
+    renderClientes: function() {
+        var el = $("#receitas-clientes-select");
+        var options = '';
+        gereMe.clientesList.each(function(c) {
+            options += '<option value="' + c.get('id') + '"> ' + c.get('nome') + ' </option>';
+        });
+
+        el.html(options);
+    },
+
+    renderServicos: function() {
+        var el = $("#receitas-servicos-select");
+        var options = '';
+        gereMe.servicosList.each(function(c) {
+            options += '<option value="' + c.get('id') + '"> ' + c.get('titulo') + ' </option>';
+        });
+
+        el.html(options);
     },
 
     initHook: function() {
@@ -53,6 +79,15 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                               { "bSortable": false }
                             ] } );
 
+    
+        $('#recorrente-check-box').on('click', function(e) {
+            var that = $(this);
+            if (that.is (':checked')) {
+                $('.recorrente-form').show();
+            } else {
+                $('.recorrente-form').hide();
+            }
+        });
 
         // dinam add row on table
         //oTable1.fnAddData(['ola','ola','ola','ola','ola','ola','ola']);
@@ -71,7 +106,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
     show: function() {
         if(!this.loaded) {
-            this.receitasList.fetch({reset:true}).then(function() {
+            gereMe.receitasList.fetch({reset:true}).then(function() {
                 $('#receitas-page-js').show();
             });
         }
@@ -88,7 +123,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         var porpagar = 0.0;
         var percentagempaga = 0.0;
 
-        this.receitasList.each(function(r) {
+        gereMe.receitasList.each(function(r) {
             if(r.get('pago') == 1) {
                 pago += parseFloat(r.get('valor'));
             } else {
@@ -107,7 +142,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
         $el = $(evt.target);
         var modelID = $el.attr('data-id');
-        var model = this.receitasList.get(modelID);
+        var model = gereMe.receitasList.get(modelID);
 
         /* se tem classe btn-success e pq foi pago */
         if($el.hasClass('btn-success')) {
