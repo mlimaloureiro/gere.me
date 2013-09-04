@@ -13,8 +13,7 @@
 
 Route::get('/', function()
 {
-	$result = array('cenas' => 'ola');
-	return json_encode($result);
+	return View::make('home');
 });
 
 

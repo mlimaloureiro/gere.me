@@ -3,10 +3,10 @@
 gereMe.Models.ReceitasModel = Backbone.Model.extend({
 
 	name: 'receita',
-	urlRoot: serverURL + '/receitas/',
+	urlRoot: serverURL + '/receitas',
 
 	url: function() {
-		return serverURL + '/receitas/';
+		return serverURL + '/receitas';
 	}
 	//url: serverURL + '/receitas/'
 
