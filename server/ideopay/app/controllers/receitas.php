@@ -10,7 +10,7 @@ class receitas extends \BaseController {
 	public function index()
 	{
 		$receitas = receita::all();
-		return Response::json(['error' => false , 'receitas' => $receitas->toArray()] , 201 );
+		return Response::json($receitas->toArray());
 	}
 
 	/**

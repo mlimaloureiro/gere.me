@@ -1,5 +1,6 @@
 /*global gereMe, $*/
 
+var serverURL = 'http://localhost:8000/api/v1';
 
 window.gereMe = {
     Models: {},

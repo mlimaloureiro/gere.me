@@ -10,27 +10,37 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     initialize: function() {
     	console.log("[ReceitasView] Created.");
     	if(!this.loaded) {
-    		this.load();
+            this.receitasList = new gereMe.Collections.ReceitasCollection();
+            this.receitasList.on('reset', this.render, this);
+            this.receitasList.on('change', this.render, this);
+            this.receitasList.on('add', this.render, this);
+    
+            this.receitasList.fetch({reset:true});
     	}
     },
 
     render: function() {
+        var estatisticas = this.calculaStats();
         if(!this.loaded) {
             /* create sub views */
-            var receitas = [];
-            for(var i = 0; i <= 1000; i++) {
-                receitas.push({'nome': 'logotipo','valor' :'100€','servico':'Design','date' : '31-08-2013', 'estado' : 'Pago'});
-            }
 
-            /*var receitas = [
-                {'nome': 'logotipo','valor' :'100€','servico':'Design','date' : '31-08-2013', 'estado' : 'Pago'},
-                {'nome': 'cenas','valor' :'102€','servico':'Web','date' : '02-08-2013', 'estado' : 'Pago'},
-                {'nome': 'logotipo','valor' :'100€','servico':'Design','date' : '31-08-2013', 'estado' : 'Pago'},
-            ];
-            */
+            $('#page').append(this.template({receitas: this.receitasList}));
+            this.loaded = true;
 
-            $('#page').append(this.template({receitas: receitas}));
+            console.log('[ReceitasView] Loaded.');
+        } else {
+
+
         }
+        $('#receitas-stats-areceber').html(estatisticas.areceber + ' €');
+        $('#receitas-stats-porpagar').html(estatisticas.porpagar + ' €');
+        $('#receitas-stats-pago').html(estatisticas.pago + ' €');
+
+        $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
+        $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
+    
+
+        this.initHook();
 
         return this;
     },
@@ -45,10 +55,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     },
 
     load: function() {
-        this.render();
-        this.initHook();
-        this.loaded = true;
-    	console.log('[ReceitasView] Loaded.');
+        //this.receitasList.fetch({reset:true});
     },
 
     unload: function() {
@@ -57,11 +64,33 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     },
 
     show: function() {
+        console.log('SHOWING');
         $('#receitas-page-js').show();
     },
 
     hide: function() {
     	$('#receitas-page-js').hide();
-    }
+    },
+
+    calculaStats: function() {
+        var areceber = 0.0;
+        var pago = 0.0;
+        var porpagar = 0.0;
+        var percentagempaga = 0.0;
+
+        this.receitasList.each(function(r) {
+            if(r.get('pago') == 1) {
+                pago += parseFloat(r.get('valor'));
+            } else {
+                porpagar += parseFloat(r.get('valor'));
+            }
+            areceber += parseFloat(r.get('valor'));
+        });
+
+        percentagempaga = Math.round(pago / areceber * 100);
+
+        return {'areceber' : areceber, 'pago': pago, 'porpagar': porpagar, 'percentagempaga': percentagempaga};
+
+    },
 
 });

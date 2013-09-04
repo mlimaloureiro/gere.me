@@ -14,8 +14,8 @@
 
 			<h3 class="header smaller lighter green">Informação</h3>
 
-			<div class="progress progress-warning progress-striped" data-percent="66% pago">
-				<div class="bar" style="width:66%;"></div>
+			<div class="progress progress-warning progress-striped" id="percentagem-receitas-prog" data-percent="0% pago">
+				<div class="bar" id="percentagem-receitas" style="width:0%;"></div>
 			</div>
 
 			<div class="infobox-container">
@@ -26,7 +26,7 @@
 						</div>
 						<div class="infobox-data">
 							<div class="infobox-content">A receber</div>
-							<div class="infobox-content">5300 €</div>
+							<div class="infobox-content" id="receitas-stats-areceber"></div>
 						</div>
 					</div>
 
@@ -37,7 +37,7 @@
 
 						<div class="infobox-data">
 							<div class="infobox-content">Pago</div>
-							<div class="infobox-content">4000 €</div>
+							<div class="infobox-content" id="receitas-stats-pago"></div>
 						</div>
 					</div>
 
@@ -48,7 +48,7 @@
 
 						<div class="infobox-data">
 							<div class="infobox-content">Por pagar</div>
-							<div class="infobox-content">1300 €</div>
+							<div class="infobox-content" id="receitas-stats-porpagar"></div>
 						</div>
 					</div>
 				</div>
@@ -88,7 +88,7 @@
 
 					<tbody>
 
-						<% _.each(receitas, function(r) { %>
+						<% receitas.each(function(r) { %>
 						<tr>
 							<td class="center">
 								<label>
@@ -98,16 +98,16 @@
 							</td>
 
 							<td>
-								<a href="#"><%= r.nome %></a>
+								<a href="#"><%= r.get('titulo') %></a>
 							</td>
 
-							<td><%= r.valor %></td>
+							<td><%= r.get('valor') %></td>
 
-							<td class="hidden-480"><%= r.servico %></td>
-							<td class="hidden-phone"><%= r.date %></td>
+							<td class="hidden-480"><%= r.get('servico_id') %></td>
+							<td class="hidden-phone"><%= r.get('data_limite') %></td>
 
 							<td class="hidden-480">
-								<span class="label label-success"><%= r.estado %></span>
+								<span class="label label-success"><%= r.get('pago') %></span>
 							</td>
 
 							<td>
@@ -160,7 +160,7 @@
 								</div>
 							</td>
 						</tr>
-						<% }) %>
+						<% }); %>
 					</tbody>
 				</table>
 			</div> <!-- row fluid -->
