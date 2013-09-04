@@ -3,6 +3,6 @@
 gereMe.Models.ClientesModel = Backbone.Model.extend({
 
 	name: 'cliente',
-	urlRoot: serverURL + '/clientes/'
+	urlRoot: serverURL + '/clientes/',
 
 });

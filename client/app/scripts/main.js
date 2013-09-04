@@ -24,6 +24,7 @@ window.gereMe = {
 
 $(document).ready(function () {
     'use strict';
+
     gereMe.init();
 
     new gereMe.Routers.RouteRouter();

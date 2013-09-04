@@ -9,18 +9,18 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
     initialize: function() {
     	console.log("[ReceitasView] Created.");
-        _.bindAll(this,'togglePago');
+        _.bindAll(this,'togglePago','criaReceita');
     	if(!this.loaded) {
 
             gereMe.receitasList.on('reset', this.render, this);
             gereMe.receitasList.on('change', this.render, this);
             gereMe.receitasList.on('add', this.render, this);
 
-            gereMe.clientesList.on('add', this.render, this);
-            gereMe.servicosList.on('add', this.render, this);
-            
-            gereMe.servicosList.on('remove', this.render, this);
-            gereMe.clientesList.on('remove', this.render, this);
+            gereMe.servicosList.on('add', this.renderServicos, this);
+            gereMe.servicosList.on('remove', this.renderServicos, this);
+
+            gereMe.clientesList.on('add', this.renderClientes, this);
+            gereMe.clientesList.on('remove', this.renderClientes, this);
 
     	}
     },
@@ -40,9 +40,9 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         this.renderClientes();
         this.renderServicos();
 
-        $('#receitas-stats-areceber').html(estatisticas.areceber + ' €');
-        $('#receitas-stats-porpagar').html(estatisticas.porpagar + ' €');
-        $('#receitas-stats-pago').html(estatisticas.pago + ' €');
+        $('#receitas-stats-areceber').html(parseFloat(estatisticas.areceber).toFixed(2) + ' €');
+        $('#receitas-stats-porpagar').html(parseFloat(estatisticas.porpagar).toFixed(2) + ' €');
+        $('#receitas-stats-pago').html(parseFloat(estatisticas.pago).toFixed(2) + ' €');
 
         $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
         $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
@@ -79,15 +79,25 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                               { "bSortable": false }
                             ] } );
 
-    
+        /* form */ 
         $('#recorrente-check-box').on('click', function(e) {
             var that = $(this);
             if (that.is (':checked')) {
+                $('.limite-form').hide();
+                $('.pronto_check').attr('checked', false);
                 $('.recorrente-form').show();
             } else {
                 $('.recorrente-form').hide();
+
+                $('.limite-form').show();
             }
         });
+
+        $('#receita-inputs').submit(this.criaReceita);
+
+        /* init datepicker */
+
+        $('.date-picker').datepicker();
 
         // dinam add row on table
         //oTable1.fnAddData(['ola','ola','ola','ola','ola','ola','ola']);
@@ -136,6 +146,85 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
         return {'areceber' : areceber, 'pago': pago, 'porpagar': porpagar, 'percentagempaga': percentagempaga};
 
+    },
+
+    criaReceita: function(evt) {
+        console.log('---------- CRIA RECEITA -----------');
+        /* vemos se tem prestacoes ou nao */
+        var titulo = $('input[name=titulo]').val();
+        var servico_id = $('select[name=servico_id]').val();
+        var cliente_id = $('select[name=cliente_id]').val();
+        var valor = $('input[name=valor]').val();
+        var prestacoes = $('#recorrente-check-box').is(':checked');
+        var automatico = $('#automatico-check').is(':checked');
+        var pronto_pagamento = $('#pronto-check').is(':checked');
+        var data_limite = $('input[name=data_limite]').val();
+        var meses = $('select[name=meses]').val();
+
+        /*
+        console.log('titulo: ' + titulo);
+        console.log('servico: ' + servico_id);
+        console.log('cliente: ' + cliente_id);
+        console.log('valor: ' + valor);
+        console.log('prestacoes: ' + prestacoes);
+        console.log('automatico: ' + automatico);
+        console.log('pronto_pagamento: ' + pronto_pagamento);
+        console.log('data_limite: ' + data_limite);
+        console.log('meses: ' + meses);
+        */
+
+        
+
+        if(prestacoes) {
+
+            var valorDaPrestacao = valor / meses;
+
+            for(var i = 1; i <= meses; i++) {
+                pago = automatico ? 1 : 0; 
+                automatico = automatico ? 1 : 0;
+
+                var obj =   {   'user_id':1,
+                                'servico_id':servico_id,
+                                'cliente_id':cliente_id,
+                                'valor': valorDaPrestacao,
+                                'titulo': i + 'ª prest. ' + titulo,
+                                'prestacoes' : 1,
+                                'automatico' : automatico,
+                                'mes':i,
+                                'pago' : pago   
+                            };
+
+                //console.log(obj);
+
+                model = new gereMe.Models.ReceitasModel(obj);
+                model.save();
+                console.log(model);
+                gereMe.receitasList.add(model);
+                //gereMe.receitasList.create(obj,{wait:true});
+            }
+
+        } else {
+            pronto_pagamento = pronto_pagamento ? 1 : 0;
+            pago = pronto_pagamento;
+
+            var obj =   {   'user_id':1,
+                            'servico_id':servico_id,
+                            'cliente_id':cliente_id,
+                            'valor': valor,
+                            'titulo': titulo,
+                            'prestacoes' : 0,
+                            'automatico' : automatico,
+                            'data_limite' : data_limite,
+                            'pronto_pagamento': pronto_pagamento,
+                            'pago' : pago   
+                        };
+
+            gereMe.receitasList.create(obj,{wait:true});
+        }
+
+        
+
+        evt.preventDefault();
     },
 
     togglePago: function(evt) {

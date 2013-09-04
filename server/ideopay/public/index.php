@@ -1,5 +1,11 @@
 <?php
-header('Access-Control-Allow-Origin: http://localhost:9000');
+header('Access-Control-Allow-Headers: content-type');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS,PUT, DELETE');
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+	return;
+}
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
