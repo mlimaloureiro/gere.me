@@ -9,6 +9,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
     initialize: function() {
     	console.log("[ReceitasView] Created.");
+        _.bindAll(this,'togglePago');
     	if(!this.loaded) {
             this.receitasList = new gereMe.Collections.ReceitasCollection();
             this.receitasList.on('reset', this.render, this);
@@ -26,12 +27,14 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
             $('#page').append(this.template({receitas: this.receitasList}));
             this.loaded = true;
+            this.initHook();
 
             console.log('[ReceitasView] Loaded.');
         } else {
 
 
         }
+
         $('#receitas-stats-areceber').html(estatisticas.areceber + ' €');
         $('#receitas-stats-porpagar').html(estatisticas.porpagar + ' €');
         $('#receitas-stats-pago').html(estatisticas.pago + ' €');
@@ -40,18 +43,20 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
     
 
-        this.initHook();
-
         return this;
     },
 
     initHook: function() {
+
+
         var oTable1 = $('#receitas-table').dataTable( {
                             "aoColumns": [
                               { "bSortable": false },
                               null, null,null, null, null,
                               { "bSortable": false }
                             ] } );
+
+        $('.toggle-pago').on('click',this.togglePago);
     },
 
     load: function() {
@@ -92,5 +97,30 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         return {'areceber' : areceber, 'pago': pago, 'porpagar': porpagar, 'percentagempaga': percentagempaga};
 
     },
+
+    togglePago: function(evt) {
+
+        $el = $(evt.target);
+        var modelID = $el.attr('data-id');
+        var model = this.receitasList.get(modelID);
+
+        
+
+        /* se tem classe btn-success e pq foi pago */
+        if($el.hasClass('btn-success')) {
+            $el.removeClass('btn-success');
+            $el.addClass('btn-danger');
+            $el.html('Por pagar');
+            model.set('pago',0);
+
+        } else {
+            $el.removeClass('btn-danger');
+            $el.addClass('btn-success');
+            $el.html('Pago');
+            model.set('pago',1);
+        }
+
+        this.render();
+    }
 
 });

@@ -92,7 +92,7 @@
 						<tr>
 							<td class="center">
 								<label>
-									<input type="checkbox" class="ace" />
+									<input type="checkbox" class="ace" id="<%= r.get('id') %>"/>
 									<span class="lbl"></span>
 								</label>
 							</td>
@@ -107,7 +107,8 @@
 							<td class="hidden-phone"><%= r.get('data_limite') %></td>
 
 							<td class="hidden-480">
-								<span class="label label-success"><%= r.get('pago') %></span>
+								<button data-id = "<%= r.id %>" class="btn btn-minier toggle-pago <%= r.get('pago') == 1 ? 'btn-success' : 'btn-danger' %> <%= r.get('id') + '_line_buttom' %>"><%= r.get('pago') == 1 ? 'Pago' : 'Por pagar' %></button>
+								<!--<span class="label label-success"><%= r.get('pago') %></span>-->
 							</td>
 
 							<td>
