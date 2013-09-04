@@ -9,7 +9,8 @@ class despesas extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+		$despesas = Despesa::all();
+		return Response::json($despesas->toArray());
 	}
 
 	/**
@@ -29,7 +30,7 @@ class despesas extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+	
 	}
 
 	/**

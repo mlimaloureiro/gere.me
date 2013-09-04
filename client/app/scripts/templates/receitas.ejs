@@ -25,7 +25,7 @@
 							<i class="icon-asterisk"></i>
 						</div>
 						<div class="infobox-data">
-							<div class="infobox-content">A receber</div>
+							<div class="infobox-content">Total</div>
 							<div class="infobox-content" id="receitas-stats-areceber"></div>
 						</div>
 					</div>
@@ -36,7 +36,7 @@
 						</div>
 
 						<div class="infobox-data">
-							<div class="infobox-content">Pago</div>
+							<div class="infobox-content">Recebido</div>
 							<div class="infobox-content" id="receitas-stats-pago"></div>
 						</div>
 					</div>
@@ -47,7 +47,7 @@
 						</div>
 
 						<div class="infobox-data">
-							<div class="infobox-content">Por pagar</div>
+							<div class="infobox-content">A receber</div>
 							<div class="infobox-content" id="receitas-stats-porpagar"></div>
 						</div>
 					</div>
@@ -80,6 +80,7 @@
 								<i class="icon-time bigger-110 hidden-phone"></i>
 								Limite pagamento
 							</th>
+							<th class="hidden-480">Cliente</th>
 							<th class="hidden-480">Estado</th>
 
 							<th></th>
@@ -103,9 +104,9 @@
 
 							<td><%= r.get('valor') %></td>
 
-							<td class="hidden-480"><%= r.get('servico_id') %></td>
+							<td class="hidden-480"><%= r.get('servico')['titulo'] %></td>
 							<td class="hidden-phone"><%= r.get('data_limite') %></td>
-
+							<td class="hidden-480"> <%= r.get('cliente')['nome'] %> </td>
 							<td class="hidden-480">
 								<button data-id = "<%= r.id %>" class="btn btn-minier toggle-pago <%= r.get('pago') == 1 ? 'btn-success' : 'btn-danger' %> <%= r.get('id') + '_line_buttom' %>"><%= r.get('pago') == 1 ? 'Pago' : 'Por pagar' %></button>
 								<!--<span class="label label-success"><%= r.get('pago') %></span>-->

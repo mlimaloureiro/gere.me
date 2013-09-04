@@ -9,7 +9,8 @@ class servicos extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+		$servicos = Servico::all();
+		return Response::json($servicos->toArray());
 	}
 
 	/**

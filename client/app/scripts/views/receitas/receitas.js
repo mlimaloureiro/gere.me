@@ -15,8 +15,6 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
             this.receitasList.on('reset', this.render, this);
             this.receitasList.on('change', this.render, this);
             this.receitasList.on('add', this.render, this);
-    
-            this.receitasList.fetch({reset:true});
     	}
     },
 
@@ -42,19 +40,22 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
         $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
     
-
+        console.log(this.receitasList);
         return this;
     },
 
     initHook: function() {
 
-
         var oTable1 = $('#receitas-table').dataTable( {
                             "aoColumns": [
                               { "bSortable": false },
-                              null, null,null, null, null,
+                              null, null,null,null, null, null,
                               { "bSortable": false }
                             ] } );
+
+
+        // dinam add row on table
+        //oTable1.fnAddData(['ola','ola','ola','ola','ola','ola','ola']);
 
         $('.toggle-pago').on('click',this.togglePago);
     },
@@ -69,7 +70,11 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     },
 
     show: function() {
-        console.log('SHOWING');
+        if(!this.loaded) {
+            this.receitasList.fetch({reset:true}).then(function() {
+                $('#receitas-page-js').show();
+            });
+        }
         $('#receitas-page-js').show();
     },
 
@@ -103,8 +108,6 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         $el = $(evt.target);
         var modelID = $el.attr('data-id');
         var model = this.receitasList.get(modelID);
-
-        
 
         /* se tem classe btn-success e pq foi pago */
         if($el.hasClass('btn-success')) {

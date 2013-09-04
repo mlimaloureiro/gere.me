@@ -9,7 +9,8 @@ class clientes extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+		$clientes = Cliente::all();
+		return Response::json($clientes->toArray());
 	}
 
 	/**
@@ -40,7 +41,8 @@ class clientes extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$cliente = Cliente::find($id);
+		return Response::json($cliente->toArray());
 	}
 
 	/**
