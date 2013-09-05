@@ -56,7 +56,7 @@
 
 			<h3 class="header smaller lighter blue">Listagem</h3>
 
-			<p><button class="btn btn-success btn-block"> <i class="icon-plus"></i> Nova receita </button></p>
+			<p><button class="btn btn-success btn-block toggle-nova-receita"> <i class="icon-plus"></i> Nova receita </button></p>
 
 
 			<!-- ##			##
@@ -66,7 +66,7 @@
 
 			<div class="row-fluid">
 
-				<div class="span12" id="nova-receita-form">
+				<div class="span12" id="nova-receita-form" style="display:none">
 					<div class="page-header position-relative">
 						<h4> Nova receita </h4>
 					</div>
@@ -74,13 +74,13 @@
 						<!--<legend>Form</legend>-->
 
 						<div class="control-group">
+							
 							<label class="control-label" for="form-field-1">Título</label>
 
 							<div class="controls">
 								<input type="text" id="titulo" name="titulo" class="span6" placeholder="Nome da receita">
 							</div>
-
-							<hr>
+							<p></p>
 							<label class="control-label" for="form-field-1">Serviço</label>
 
 							<div class="controls">
@@ -89,8 +89,7 @@
 								</select>
 							</div>
 
-							<hr>
-
+							<p></p>
 							<label class="control-label" for="form-field-1">Cliente</label>
 
 							<div class="controls">
@@ -98,8 +97,7 @@
 																						
 								</select>
 							</div>
-
-							<hr>
+							<p></p>
 
 							<label class="control-label" for="form-field-1">Valor</label>
 
@@ -107,11 +105,8 @@
 								<input type="text" id="form-field-1" class="span6" name="valor" placeholder="Indique o valor a receber.">
 							</div>
 							
+							<p></p>
 
-						</div>
-						<hr>
-
-						<div class="control-group">
 							<label class="control-label">Prestações</label>
 
 							<div class="controls">
@@ -121,53 +116,50 @@
 								</label>
 							</div>
 
+							<p></p>
+							<div class="limite-form">
 
-						</div>
-						<hr>
-						<div class="limite-form">
-
-							<label class="control-label" for="form-field-1">Pronto Pagamento</label>
-							<div class="controls">
-								<label>
-									<input name="pronto_check" id="pronto-check" type="checkbox" class="ace pronto_check">
-									<span class="lbl"> Sim</span>
-								</label>
+								<label class="control-label" for="form-field-1">Pronto Pagamento</label>
+								<div class="controls">
+									<label>
+										<input name="pronto_check" id="pronto-check" type="checkbox" class="ace pronto_check">
+										<span class="lbl"> Sim</span>
+									</label>
+								</div>
+								<p></p>
+								<label class="control-label" for="form-field-1">Data Limite</label>
+								
+								<div class="controls">
+									<div class="input-append">
+										<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" data-date-format="yyyy-mm-dd">
+										<span class="add-on">
+											<i class="icon-calendar"></i>
+										</span>
+									</div>
+								</div>
+								<p></p>
 							</div>
-							<hr>
-							<label class="control-label" for="form-field-1">Data Limite</label>
+							<div class="recorrente-form" style="display:none">
+								<div class="control-group">
+									<label class="control-label" for="form-field-1">Meses</label>
 
-							<div class="controls">
-								<div class="input-append">
-									<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" data-date-format="yyyy-mm-dd">
-									<span class="add-on">
-										<i class="icon-calendar"></i>
-									</span>
+									<div class="controls">
+									<select class="select" name="meses" class="span2">
+										<option value="2">2</option>	
+										<option value="3">3</option>
+										<option value="4">4</option>	
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+									</select>
+								</div>
+
+
 								</div>
 							</div>
-						</div>
-						<div class="recorrente-form" style="display:none">
-							<div class="control-group">
-								<label class="control-label" for="form-field-1">Meses</label>
+							<p></p>
 
-								<div class="controls">
-								<select class="select" name="meses" class="span2">
-									<option value="2">2</option>	
-									<option value="3">3</option>
-									<option value="4">4</option>	
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
-								</select>
-							</div>
-
-
-							</div>
-						</div>
-
-						<hr>
-
-						<div class="control-group">
 							<label class="control-label">Pagamento Automatico</label>
 
 							<div class="controls">
@@ -176,10 +168,10 @@
 									<span class="lbl"> Sim</span>
 								</label>
 							</div>
-						</div>						
-
-						<div class="form-actions center">
-							<input type="submit" value="Confirmar" class="btn btn-small btn-success"></input>
+							<p></p>
+							<div class="form-actions center" style="padding:10px 20px 10px">
+								<input type="submit" value="Confirmar" class="btn btn-small btn-success"></input>
+							</div>
 						</div>
 					</form>	
 				</div>
