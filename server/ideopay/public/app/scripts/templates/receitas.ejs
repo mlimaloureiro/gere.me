@@ -1,0 +1,311 @@
+<div id="receitas-page-js" style="display:none">
+	<div class="page-header position-relative">
+		<h1>
+			Contas
+			<small>
+				<i class="icon-double-angle-right"></i>
+				Receitas
+			</small>
+		</h1>
+	</div><!--/.page-header-->
+
+	<div class="row-fluid">
+		<div class="span12">
+
+			<h3 class="header smaller lighter green">Informação</h3>
+
+			<div class="progress progress-warning progress-striped" id="percentagem-receitas-prog" data-percent="0% pago">
+				<div class="bar" id="percentagem-receitas" style="width:0%;"></div>
+			</div>
+
+			<div class="infobox-container">
+				
+					<div class="infobox infobox-blue infobox-small infobox-dark">
+						<div class="infobox-icon">
+							<i class="icon-asterisk"></i>
+						</div>
+						<div class="infobox-data">
+							<div class="infobox-content">Total</div>
+							<div class="infobox-content" id="receitas-stats-areceber"></div>
+						</div>
+					</div>
+
+					<div class="infobox infobox-green infobox-small infobox-dark">
+						<div class="infobox-icon">
+							<i class="icon-check"></i>
+						</div>
+
+						<div class="infobox-data">
+							<div class="infobox-content">Recebido</div>
+							<div class="infobox-content" id="receitas-stats-pago"></div>
+						</div>
+					</div>
+
+					<div class="infobox infobox-grey infobox-small infobox-dark">
+						<div class="infobox-icon">
+							<i class="icon-check-empty"></i>
+						</div>
+
+						<div class="infobox-data">
+							<div class="infobox-content">A receber</div>
+							<div class="infobox-content" id="receitas-stats-porpagar"></div>
+						</div>
+					</div>
+				</div>
+
+
+			<h3 class="header smaller lighter blue">Listagem</h3>
+
+			<p><button class="btn btn-success btn-block"> <i class="icon-plus"></i> Nova receita </button></p>
+
+
+			<!-- ##			##
+				 ##	FORM 	##
+				 ##			## -->
+
+
+			<div class="row-fluid">
+
+				<div class="span12" id="nova-receita-form">
+					<div class="page-header position-relative">
+						<h4> Nova receita </h4>
+					</div>
+					<form class="form-horizontal" id="receita-inputs">
+						<!--<legend>Form</legend>-->
+
+						<div class="control-group">
+							<label class="control-label" for="form-field-1">Título</label>
+
+							<div class="controls">
+								<input type="text" id="titulo" name="titulo" class="span6" placeholder="Nome da receita">
+							</div>
+
+							<hr>
+							<label class="control-label" for="form-field-1">Serviço</label>
+
+							<div class="controls">
+								<select id="receitas-servicos-select" name="servico_id">
+																			
+								</select>
+							</div>
+
+							<hr>
+
+							<label class="control-label" for="form-field-1">Cliente</label>
+
+							<div class="controls">
+								<select id="receitas-clientes-select" name="cliente_id">
+																						
+								</select>
+							</div>
+
+							<hr>
+
+							<label class="control-label" for="form-field-1">Valor</label>
+
+							<div class="controls">
+								<input type="text" id="form-field-1" class="span6" name="valor" placeholder="Indique o valor a receber.">
+							</div>
+							
+
+						</div>
+						<hr>
+
+						<div class="control-group">
+							<label class="control-label">Prestações</label>
+
+							<div class="controls">
+								<label>
+									<input name="recorrente-check" id="recorrente-check-box" type="checkbox" class="ace">
+									<span class="lbl"> Sim</span>
+								</label>
+							</div>
+
+
+						</div>
+						<hr>
+						<div class="limite-form">
+
+							<label class="control-label" for="form-field-1">Pronto Pagamento</label>
+							<div class="controls">
+								<label>
+									<input name="pronto_check" id="pronto-check" type="checkbox" class="ace pronto_check">
+									<span class="lbl"> Sim</span>
+								</label>
+							</div>
+							<hr>
+							<label class="control-label" for="form-field-1">Data Limite</label>
+
+							<div class="controls">
+								<div class="input-append">
+									<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" data-date-format="yyyy-mm-dd">
+									<span class="add-on">
+										<i class="icon-calendar"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="recorrente-form" style="display:none">
+							<div class="control-group">
+								<label class="control-label" for="form-field-1">Meses</label>
+
+								<div class="controls">
+								<select class="select" name="meses" class="span2">
+									<option value="2">2</option>	
+									<option value="3">3</option>
+									<option value="4">4</option>	
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+								</select>
+							</div>
+
+
+							</div>
+						</div>
+
+						<hr>
+
+						<div class="control-group">
+							<label class="control-label">Pagamento Automatico</label>
+
+							<div class="controls">
+								<label>
+									<input name="automatico-check" id="automatico-check" name="automatico" type="checkbox" class="ace">
+									<span class="lbl"> Sim</span>
+								</label>
+							</div>
+						</div>						
+
+						<div class="form-actions center">
+							<input type="submit" value="Confirmar" class="btn btn-small btn-success"></input>
+						</div>
+					</form>	
+				</div>
+			</div>
+
+
+
+
+
+
+			<!-- ##			##
+				 ##	TABELA 	##
+				 ##			## -->
+
+
+
+
+			<div class="row-fluid">
+				<div class="table-header">
+					Receitas Setembro 2013
+				</div>
+
+				<table id="receitas-table" class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th class="center">
+								<label>
+									<input type="checkbox" class="ace" />
+									<span class="lbl"></span>
+								</label>
+							</th>
+							<th>Título</th>
+							<th>Valor</th>
+							<th class="hidden-480">Tipo de Serviço</th>
+
+							<th class="hidden-phone">
+								<i class="icon-time bigger-110 hidden-phone"></i>
+								Limite pagamento
+							</th>
+							<th class="hidden-480">Cliente</th>
+							<th class="hidden-480">Estado</th>
+
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<% receitas.each(function(r) { %>
+						<tr>
+							<td class="center">
+								<label>
+									<input type="checkbox" class="ace" id="<%= r.get('id') %>"/>
+									<span class="lbl"></span>
+								</label>
+							</td>
+
+							<td>
+								<a href="#"><%= r.get('titulo') %></a>
+							</td>
+
+							<td><%= r.get('valor') %></td>
+
+							<td class="hidden-480"><%= r.get('servico')['titulo'] %></td>
+							<td class="hidden-phone"><%= r.get('data_limite') %></td>
+							<td class="hidden-480"> <%= r.get('cliente')['nome'] %> </td>
+							<td class="hidden-480">
+								<button data-id = "<%= r.id %>" class="btn btn-minier toggle-pago <%= r.get('pago') == 1 ? 'btn-success' : 'btn-danger' %> <%= r.get('id') + '_line_buttom' %>"><%= r.get('pago') == 1 ? 'Pago' : 'Por pagar' %></button>
+								<!--<span class="label label-success"><%= r.get('pago') %></span>-->
+							</td>
+
+							<td>
+								<div class="hidden-phone visible-desktop action-buttons">
+									<a class="blue" href="#">
+										<i class="icon-zoom-in bigger-130"></i>
+									</a>
+
+									<a class="green" href="#">
+										<i class="icon-pencil bigger-130"></i>
+									</a>
+
+									<a class="red" href="#">
+										<i class="icon-trash bigger-130"></i>
+									</a>
+								</div>
+
+								<div class="hidden-desktop visible-phone">
+									<div class="inline position-relative">
+										<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+											<i class="icon-caret-down icon-only bigger-120"></i>
+										</button>
+
+										<ul class="dropdown-menu dropdown-icon-only dropdown-yellow pull-right dropdown-caret dropdown-close">
+											<li>
+												<a href="#" class="tooltip-info" data-rel="tooltip" title="View">
+													<span class="blue">
+														<i class="icon-zoom-in bigger-120"></i>
+													</span>
+												</a>
+											</li>
+
+											<li>
+												<a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
+													<span class="green">
+														<i class="icon-edit bigger-120"></i>
+													</span>
+												</a>
+											</li>
+
+											<li>
+												<a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
+													<span class="red">
+														<i class="icon-trash bigger-120"></i>
+													</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<% }); %>
+					</tbody>
+				</table>
+			</div> <!-- row fluid -->
+		</div><!-- span -->
+	</div><!--/.row-fluid-->
+</div>
+

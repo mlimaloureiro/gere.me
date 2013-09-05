@@ -191,7 +191,7 @@
 
 			<div class="row-fluid">
 				<div class="table-header">
-					Receitas Setembro 2013
+					Listagem de receitas
 				</div>
 
 				<table id="receitas-table" class="table table-striped table-bordered table-hover">
@@ -233,7 +233,7 @@
 								<a href="#"><%= r.get('titulo') %></a>
 							</td>
 
-							<td><%= r.get('valor') %></td>
+							<td><%= parseFloat(r.get('valor')).toFixed(2) %> €</td>
 
 							<td class="hidden-480"><%= r.get('servico')['titulo'] %></td>
 							<td class="hidden-phone"><%= r.get('data_limite') %></td>
@@ -256,40 +256,6 @@
 									<a class="red" href="#">
 										<i class="icon-trash bigger-130"></i>
 									</a>
-								</div>
-
-								<div class="hidden-desktop visible-phone">
-									<div class="inline position-relative">
-										<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
-											<i class="icon-caret-down icon-only bigger-120"></i>
-										</button>
-
-										<ul class="dropdown-menu dropdown-icon-only dropdown-yellow pull-right dropdown-caret dropdown-close">
-											<li>
-												<a href="#" class="tooltip-info" data-rel="tooltip" title="View">
-													<span class="blue">
-														<i class="icon-zoom-in bigger-120"></i>
-													</span>
-												</a>
-											</li>
-
-											<li>
-												<a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">
-													<span class="green">
-														<i class="icon-edit bigger-120"></i>
-													</span>
-												</a>
-											</li>
-
-											<li>
-												<a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
-													<span class="red">
-														<i class="icon-trash bigger-120"></i>
-													</span>
-												</a>
-											</li>
-										</ul>
-									</div>
 								</div>
 							</td>
 						</tr>

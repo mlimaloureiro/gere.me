@@ -9,7 +9,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
     initialize: function() {
     	console.log("[ReceitasView] Created.");
-        _.bindAll(this,'togglePago','criaReceita','resetTable');
+        _.bindAll(this,'togglePago','criaReceita','resetTable','hide');
     	if(!this.loaded) {
 
             gereMe.receitasList.on('reset', this.render, this);
@@ -28,6 +28,20 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     render: function() {
         if(!this.loaded) {
             /* create sub views */
+
+            /* popula elements associados */
+            gereMe.receitasList.each(function(r) {
+                var servico = [];
+                var cliente = [];
+                var aux = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))});
+                var aux2 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))})
+                servico['titulo'] = aux.get('titulo');
+                servico['id'] = aux.get('id');
+                cliente['nome'] = aux2.get('nome');
+                cliente['id'] = aux2.get('id');
+                r.set('servico',servico);
+                r.set('cliente',cliente);
+            });
 
             $('#page').append(this.template({receitas:gereMe.receitasList}));
 
@@ -78,12 +92,23 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
     initHook: function() {
 
-        this.oTable = $('#receitas-table').dataTable( {
-                            "aoColumns": [
-                              { "bSortable": false },
-                              null, null,null,null, null, null,
-                              { "bSortable": false }
-                            ] } );
+        var that = this;
+        this.oTable = $('#receitas-table').dataTable( 
+                            {
+                                "aoColumns": [
+                                  { "bSortable": false },
+                                  null, null,null,null, null, null,
+                                  { "bSortable": false }
+                                ],
+                                fnDrawCallback: function( oSettings ) {
+                                    $el = $('.toggle-pago');
+
+                                    $el.off();
+                                    $el.on('click',that.togglePago);
+                                }
+                            }
+                        );
+
 
         /* form */ 
         $('#recorrente-check-box').on('click', function(e) {
@@ -108,7 +133,10 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         // dinam add row on table
         //oTable1.fnAddData(['ola','ola','ola','ola','ola','ola','ola']);
 
-        $('.toggle-pago').on('click',this.togglePago);
+        //$('.toggle-pago').on('click',this.togglePago);
+
+        
+
         $('.toggle-nova-receita').on('click',function() {
             $('#nova-receita-form').toggle();
         });
@@ -181,7 +209,11 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         console.log('meses: ' + meses);
         */
 
-        
+        var models = [];
+
+        // var para contar quantos model saves foram feitos
+        // para saber quando devemos fazer resetTables;
+        var countPrestacoes = 0;
 
         if(prestacoes) {
 
@@ -202,8 +234,32 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                                 'pago' : pago   
                             };
 
-                //console.log(obj);
-                gereMe.receitasList.create(obj,{wait:true});                
+                model = new gereMe.Models.ReceitasModel();
+                model.save(obj,{
+                    success: function(model,response) {
+                        model.set('id',response.model.id);
+                        model.set('data_limite',response.model.data_limite);
+                        
+                        if(response.model.data_pago != undefined)
+                            model.set('data_pago', response.model.data_pago);
+
+                        /* limpa o os dados recebido do request */
+                        model.unset('model');
+                        model.unset('error');
+                        model.unset('message');
+                        model.unset('prestacoes');
+                        model.unset('pronto_pagamento');
+
+                        countPrestacoes++;
+
+                        if(countPrestacoes == meses) {
+                            gereMe.receitasList.add(model);
+                        } else {
+                            gereMe.receitasList.add(model,{silent:true});
+                        } 
+                    }
+                });
+
             }
 
         } else {
@@ -222,7 +278,26 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                             'pago' : pago   
                         };
 
-            gereMe.receitasList.create(obj,{wait:true});
+            model = new gereMe.Models.ReceitasModel();
+            model.save(obj,{
+                    success: function(model,response) {
+                        
+                        model.set('id',response.model.id);
+                        model.set('data_limite',response.model.data_limite);
+                        
+                        if(response.model.data_pago != undefined)
+                            model.set('data_pago', response.model.data_pago);
+
+                        /* limpa o os dados recebido do request */
+                        model.unset('model');
+                        model.unset('error');
+                        model.unset('message');
+                        model.unset('prestacoes');
+                        model.unset('pronto_pagamento');
+
+                        gereMe.receitasList.add(model);
+                    }
+                });
         }
 
         $('#nova-receita-form').hide();
@@ -235,17 +310,27 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     },
 
     resetTable:function() {
+        console.log('reset table');
         this.oTable.fnClearTable();
         var that = this;
         gereMe.receitasList.each(function(r) {
 
-
             td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
             td2 = '<a href="#">' + r.get('titulo') +' </a>';
-            td3 = r.get('valor');
-            td4 = r.get('servico_id');
+            td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
+            if(r.get('servico') != undefined)
+                td4 = r.get('servico')['titulo'];
+            else
+                td4 = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))}).get('titulo');
+
             td5 = r.get('data_limite');
-            td6 = r.get('cliente_id');
+
+            if(r.get('cliente') != undefined)
+                td6 = r.get('cliente')['nome'];
+            else
+                td6 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))}).get('nome');
+
+
 
             //console.log('cliente_id = ' + r.get('cliente_id'));
             //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
@@ -260,9 +345,6 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
             that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
         });
-
-        $('toggle-page').undelegate();
-        $('.toggle-pago').on('click',this.togglePago);
 
         this.updateStats();
     },
