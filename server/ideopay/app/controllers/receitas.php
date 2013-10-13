@@ -58,6 +58,13 @@ class receitas extends \BaseController {
 		$receita->tipo = 1;
 
 
+		if($receita->cliente_id == 'create') {
+			$novoCliente = new Cliente();
+			$novoCliente->nome = Input::get('newclient_name');
+			$novoCliente->save();
+			$receita->cliente_id = $novoCliente->id;
+		}
+
 
 		if($prestacoes == 1) {
 
@@ -76,8 +83,13 @@ class receitas extends \BaseController {
 		}
 		
 		$receita->save();
-	
-		return Response::json(['error' => false , 'message' => 'Receita criada.', 'model' => $receita->toArray()] , 201 );
+
+		if(Input::get('cliente_id') == 'create') {
+			return Response::json(['error' => false , 'message' => 'Receita criada.', 'model' => $receita->toArray(), 'newClient' => true] , 201 );
+		} else {
+			return Response::json(['error' => false , 'message' => 'Receita criada.', 'model' => $receita->toArray()] , 201 );
+		}
+
 	}
 
 	/**

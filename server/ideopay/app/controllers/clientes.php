@@ -20,7 +20,7 @@ class clientes extends \BaseController {
 	 */
 	public function create()
 	{
-		//
+
 	}
 
 	/**

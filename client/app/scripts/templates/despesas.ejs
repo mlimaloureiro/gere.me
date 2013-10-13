@@ -138,13 +138,9 @@
 
 									<div class="controls">
 									<select class="select" name="meses" class="span2">
-										<option value="2">2</option>	
-										<option value="3">3</option>
-										<option value="4">4</option>	
-										<option value="5">5</option>
-										<option value="6">6</option>
-										<option value="7">7</option>
-										<option value="8">8</option>
+										<% for(var i = 2; i < 25; i++) { %>
+											<option value="<%= i %>"><%= i %></option>
+										<% } %>
 									</select>
 								</div>
 
@@ -189,13 +185,7 @@
 
 				<table id="despesas-table" class="table table-striped table-bordered table-hover">
 					<thead>
-						<tr>
-							<th class="center">
-								<label>
-									<input type="checkbox" class="ace" />
-									<span class="lbl"></span>
-								</label>
-							</th>
+						<tr>							
 							<th>Título</th>
 							<th>Valor</th>
 							<th class="hidden-480">Tipo de Serviço</th>
@@ -207,7 +197,6 @@
 							<th class="hidden-480">Estado</th>
 
 							<th></th>
-							<th style="display:none"></th>
 						</tr>
 					</thead>
 
@@ -215,12 +204,7 @@
 
 						<% despesas.each(function(r) { %>
 						<tr>
-							<td class="center">
-								<label>
-									<input type="checkbox" class="ace" id="<%= r.get('id') %>"/>
-									<span class="lbl"></span>
-								</label>
-							</td>
+							
 
 							<td> 
 								<%= r.get('titulo') %>
@@ -246,7 +230,6 @@
 									</a>
 								</div>
 							</td>
-							<td style="display:none"> </td>
 						</tr>
 						<% }); %>
 					</tbody>

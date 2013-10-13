@@ -88,8 +88,8 @@ gereMe.Views.DespesasView = Backbone.View.extend({
         this.oTable = $('#despesas-table').dataTable( 
                             {
                                 "aoColumns": [
-                                  { "bSortable": false },
-                                  null, null,null,null, null, null,
+                                  { "bSortable": true },
+                                   null,null,null, null,
                                   { "bSortable": false }
                                 ],
                                 fnDrawCallback: function( oSettings ) {
@@ -327,7 +327,6 @@ gereMe.Views.DespesasView = Backbone.View.extend({
             var testDate = new Date(r.get('data_limite'));
             if(testDate.getMonth() + 1 == gereMe.currentMonth) {
 
-                td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
                 td2 = r.get('titulo');
                 td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
                 if(r.get('servico') != undefined)
@@ -348,9 +347,7 @@ gereMe.Views.DespesasView = Backbone.View.extend({
                 td6 = aux;
                 td7 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="red remove-despesa" href="#"  data-id = "' + r.id + '"><i class="icon-trash bigger-130"></i></a></div></td>';
 
-                td8 = '<td style="display:none"></td>'
-
-                that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
+                that.oTable.fnAddData([td2,td3,td4,td5,td6,td7]);
             }
 
             

@@ -97,7 +97,18 @@
 																						
 								</select>
 							</div>
+
 							<p></p>
+							
+							<div style="display:none;" id="newclient-name-form">
+								<label class="control-label" for="form-field-1">Nome do novo cliente</label>
+
+								<div class="controls" id="newclient-name-form">
+									<input type="text" id="form-field-1" class="span6" name="cliente_nome" placeholder="Indique o nome do cliente a introduzir.">
+								</div>
+
+								<p></p>
+							</div>
 
 							<label class="control-label" for="form-field-1">Valor</label>
 
@@ -197,12 +208,6 @@
 				<table id="receitas-table" class="table table-striped table-bordered table-hover">
 					<thead>
 						<tr>
-							<th class="center">
-								<label>
-									<input type="checkbox" class="ace" />
-									<span class="lbl"></span>
-								</label>
-							</th>
 							<th>Título</th>
 							<th>Valor</th>
 							<th class="hidden-480">Tipo de Serviço</th>
@@ -222,13 +227,6 @@
 
 						<% receitas.each(function(r) { %>
 						<tr>
-							<td class="center">
-								<label>
-									<input type="checkbox" class="ace" id="<%= r.get('id') %>"/>
-									<span class="lbl"></span>
-								</label>
-							</td>
-
 							<td>
 								<%= r.get('titulo') %>
 							</td>

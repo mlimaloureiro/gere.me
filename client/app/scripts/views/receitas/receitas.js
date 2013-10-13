@@ -88,6 +88,19 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
             options += '<option value="' + c.get('id') + '"> ' + c.get('nome') + ' </option>';
         });
 
+        options += '<optgroup label="----------"></optgroup><option value="create"> Criar novo cliente </option>';
+
+        el.off();
+        el.on('change', function(evt) {
+            if(el.val() == 'create') {
+                $('#newclient-name-form').show();
+            } else {
+                $('#newclient-name-form').hide();
+                $('#newclient-name-form').val('');
+            }
+        });
+
+
         el.html(options);
     },
 
@@ -107,8 +120,8 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         this.oTable = $('#receitas-table').dataTable( 
                             {
                                 "aoColumns": [
-                                  { "bSortable": false },
-                                  null, null,null,null, null, null,
+                                  { "bSortable": true },
+                                   null,null,null, null, null,
                                   { "bSortable": false }
                                 ],
                                 fnDrawCallback: function( oSettings ) {
@@ -207,6 +220,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         var titulo = $('input[name=titulo]').val();
         var servico_id = $('select[name=servico_id]').val();
         var cliente_id = $('select[name=cliente_id]').val();
+        var newclient_name = $('input[name=cliente_nome]').val();
         var valor = $('input[name=valor]').val();
         var prestacoes = $('#recorrente-check-box').is(':checked');
         var automatico = $('#automatico-check').is(':checked');
@@ -248,7 +262,8 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                                 'prestacoes' : 1,
                                 'automatico' : automatico,
                                 'mes':i,
-                                'pago' : pago   
+                                'pago' : pago,
+                                'newclient_name': newclient_name
                             };
 
                 model = new gereMe.Models.ReceitasModel();
@@ -256,9 +271,16 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                     success: function(model,response) {
                         model.set('id',response.model.id);
                         model.set('data_limite',response.model.data_limite);
-                        
+                        model.set('cliente_id', response.model.cliente_id);
+
                         if(response.model.data_pago != undefined)
                             model.set('data_pago', response.model.data_pago);
+
+                        /* caso va criar um novo cliente, adiciona-o na collection */
+                        if(response.newClient != undefined) {
+                            gereMe.clientesList.add({id:response.model.cliente_id,nome:model.get('newclient_name')});
+                        }
+
 
                         /* limpa o os dados recebido do request */
                         model.unset('model');
@@ -292,7 +314,8 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                             'automatico' : automatico,
                             'data_limite' : data_limite,
                             'pronto_pagamento': pronto_pagamento,
-                            'pago' : pago   
+                            'pago' : pago,
+                            'newclient_name': newclient_name
                         };
 
             model = new gereMe.Models.ReceitasModel();
@@ -301,9 +324,14 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                         
                         model.set('id',response.model.id);
                         model.set('data_limite',response.model.data_limite);
-                        
+                        model.set('cliente_id', response.model.cliente_id);
+
                         if(response.model.data_pago != undefined)
                             model.set('data_pago', response.model.data_pago);
+
+                        if(response.newClient != undefined) {
+                            gereMe.clientesList.add({id:response.model.cliente_id,nome:model.get('newclient_name')});
+                        }
 
                         /* limpa o os dados recebido do request */
                         model.unset('model');
@@ -311,6 +339,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                         model.unset('message');
                         model.unset('prestacoes');
                         model.unset('pronto_pagamento');
+
 
                         gereMe.receitasList.add(model);
                     }
@@ -344,7 +373,6 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
             testDate = new Date(r.get('data_limite'));
 
             if(testDate.getMonth() + 1 == gereMe.currentMonth) {
-                td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
                 td2 = r.get('titulo');
                 td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
                 if(r.get('servico') != undefined)
@@ -370,7 +398,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                 td7 = aux;
                 td8 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="red remove-receita" href="#"  data-id = "' + r.id + '"><i class="icon-trash bigger-130"></i></a></div></td>';
 
-                that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
+                that.oTable.fnAddData([td2,td3,td4,td5,td6,td7,td8]);
             }
         });
 
