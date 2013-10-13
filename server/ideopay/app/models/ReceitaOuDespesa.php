@@ -1,6 +1,6 @@
 <?php
 
-class Receita extends Eloquent {
+class ReceitaOuDespesa extends Eloquent {
 	protected $guarded = array();
 	protected $table = 'receitas';
 	public static $rules = array();

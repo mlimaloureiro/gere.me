@@ -9,7 +9,7 @@ class receitas extends \BaseController {
 	 */
 	public function index()
 	{
-		$receitas = Receita::where('data_limite', '!=', '')->orderBy('data_limite')->get();
+		$receitas = ReceitaOuDespesa::where('data_limite', '!=', '')->where('tipo','=',1)->orderBy('data_limite')->get();
 		return Response::json($receitas->toArray());
 	}
 
@@ -36,13 +36,14 @@ class receitas extends \BaseController {
 		$prontoPagamento = Input::get('pronto_pagamento');
 		$currDate = date('Y-m-d');
 
-		$receita = new Receita();
+		$receita = new ReceitaOuDespesa();
 		$receita->user_id = 1;
 		$receita->servico_id = Input::get('servico_id');	
 		$receita->cliente_id = Input::get('cliente_id');
 		$receita->titulo = Input::get('titulo');
 		$receita->valor = Input::get('valor');
 		$receita->descricao = '';
+		$receita->tipo = 1;
 
 
 
@@ -75,7 +76,7 @@ class receitas extends \BaseController {
 	 */
 	public function show($id)
 	{
-		$r = Receita::find($id);
+		$r = ReceitaOuDespesa::find($id);
 		return Response::json($r->toArray());
 	}
 

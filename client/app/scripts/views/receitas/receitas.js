@@ -309,6 +309,10 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         evt.preventDefault();
     },
 
+    removeReceita:function() {
+
+    },
+
     resetTable:function() {
         console.log('reset table');
         this.oTable.fnClearTable();
@@ -330,8 +334,6 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
             else
                 td6 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))}).get('nome');
 
-
-
             //console.log('cliente_id = ' + r.get('cliente_id'));
             //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
 
@@ -341,7 +343,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                 aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-danger ' + r.get('id') + '_line_buttom">Por pagar</button>';
 
             td7 = aux;
-            td8 = 'cenas';
+            td8 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="blue" href="#"><i class="icon-zoom-in bigger-130"></i></a><a class="green" href="#"><i class="icon-pencil bigger-130 "></i></a><a class="red" href="#"><i class="icon-trash bigger-130 remove-receita"></i></a></div></td>';
 
             that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
         });
@@ -369,6 +371,8 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         }
 
         this.updateStats();
-    }
+    },
+
+
 
 });

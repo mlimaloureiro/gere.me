@@ -7,8 +7,8 @@ class Cliente extends Eloquent {
 	public static $rules = array();
 
 
-	public function receitas() {
-		return $this->hasMany('Receita');
+	public function receitasOuDespesas() {
+		return $this->hasMany('ReceitaOuDespesa');
 	}
 
 	
