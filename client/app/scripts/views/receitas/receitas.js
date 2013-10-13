@@ -13,8 +13,10 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     	if(!this.loaded) {
 
             gereMe.receitasList.on('reset', this.render, this);
-            //gereMe.receitasList.on('change', this.resetTable, this);
+            gereMe.receitasList.on('change', this.updateStats, this);
             gereMe.receitasList.on('add', this.resetTable, this);
+            gereMe.receitasList.on('remove', this.resetTable,this);
+
 
             gereMe.servicosList.on('add', this.renderServicos, this);
             gereMe.servicosList.on('remove', this.renderServicos, this);
@@ -54,6 +56,8 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
             console.log('[ReceitasView] Loaded.');
             
+        } else {
+            this.resetTable();
         }
     
         return this;
@@ -61,13 +65,20 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
     updateStats: function() {
         var estatisticas = this.calculaStats();
+        console.log(estatisticas);
 
         $('#receitas-stats-areceber').html(parseFloat(estatisticas.areceber).toFixed(2) + ' €');
         $('#receitas-stats-porpagar').html(parseFloat(estatisticas.porpagar).toFixed(2) + ' €');
         $('#receitas-stats-pago').html(parseFloat(estatisticas.pago).toFixed(2) + ' €');
 
-        $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
-        $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
+        if(!isNaN(estatisticas.percentagempaga)) {
+            console.log('actualiza percentagem paga com ' + estatisticas.percentagempaga);
+            $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
+            $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
+        } else { 
+            $('#percentagem-receitas-prog').attr('data-percent','0% pago');
+            $('#percentagem-receitas').css('width', '0%');
+        }
     },
 
     renderClientes: function() {
@@ -105,6 +116,10 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
                                     $el.off();
                                     $el.on('click',that.togglePago);
+
+                                    $remEl = $('.remove-receita');
+                                    $remEl.off();
+                                    $remEl.on('click',that.removeReceita);
                                 }
                             }
                         );
@@ -186,6 +201,8 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
     },
 
     criaReceita: function(evt) {
+        evt.preventDefault();
+
         /* vemos se tem prestacoes ou nao */
         var titulo = $('input[name=titulo]').val();
         var servico_id = $('select[name=servico_id]').val();
@@ -304,48 +321,57 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         $('#receita-inputs').each(function() {
             this.reset();
         });
-
-
-        evt.preventDefault();
     },
 
-    removeReceita:function() {
+    removeReceita:function(evt) {
+        evt.preventDefault();
+        $el = $(evt.target).parent();
+        var modelID = $el.attr('data-id');
+        var model = gereMe.receitasList.get(modelID);
+
+        //gereMe.despesasList.remove(model);
+
+        model.destroy();
 
     },
 
     resetTable:function() {
-        console.log('reset table');
+        console.log('reset table receitas');
         this.oTable.fnClearTable();
         var that = this;
         gereMe.receitasList.each(function(r) {
 
-            td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
-            td2 = '<a href="#">' + r.get('titulo') +' </a>';
-            td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
-            if(r.get('servico') != undefined)
-                td4 = r.get('servico')['titulo'];
-            else
-                td4 = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))}).get('titulo');
+            testDate = new Date(r.get('data_limite'));
 
-            td5 = r.get('data_limite');
+            if(testDate.getMonth() + 1 == gereMe.currentMonth) {
+                td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
+                td2 = r.get('titulo');
+                td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
+                if(r.get('servico') != undefined)
+                    td4 = r.get('servico')['titulo'];
+                else
+                    td4 = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))}).get('titulo');
 
-            if(r.get('cliente') != undefined)
-                td6 = r.get('cliente')['nome'];
-            else
-                td6 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))}).get('nome');
+                td5 = r.get('data_limite');
 
-            //console.log('cliente_id = ' + r.get('cliente_id'));
-            //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
+                if(r.get('cliente') != undefined)
+                    td6 = r.get('cliente')['nome'];
+                else
+                    td6 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))}).get('nome');
 
-            if(r.get('pago') == 1)
-                aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-success ' + r.get('id') + '_line_buttom">Pago</button>';
-            else
-                aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-danger ' + r.get('id') + '_line_buttom">Por pagar</button>';
+                //console.log('cliente_id = ' + r.get('cliente_id'));
+                //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
 
-            td7 = aux;
-            td8 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="blue" href="#"><i class="icon-zoom-in bigger-130"></i></a><a class="green" href="#"><i class="icon-pencil bigger-130 "></i></a><a class="red" href="#"><i class="icon-trash bigger-130 remove-receita"></i></a></div></td>';
+                if(r.get('pago') == 1)
+                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-success ' + r.get('id') + '_line_buttom">Pago</button>';
+                else
+                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-danger ' + r.get('id') + '_line_buttom">Por pagar</button>';
 
-            that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
+                td7 = aux;
+                td8 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="red remove-receita" href="#"  data-id = "' + r.id + '"><i class="icon-trash bigger-130"></i></a></div></td>';
+
+                that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
+            }
         });
 
         this.updateStats();
@@ -361,16 +387,42 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
             $el.removeClass('btn-success');
             $el.addClass('btn-danger');
             $el.html('Por pagar');
+            model.set('data_pago',null);
             model.set('pago',0);
+            
+            model.save();
 
         } else {
-            $el.removeClass('btn-danger');
-            $el.addClass('btn-success');
-            $el.html('Pago');
-            model.set('pago',1);
-        }
 
-        this.updateStats();
+            bootbox.dialog({
+                message: '<form class="form-horizonal"><label class="control-label" for="form-field-1">Data de Pagamento</label><div class="controls"><div class="input"><input class="span2 date-picker-boot" value="' + gereMe.currentTimeString + '" data-date-format="yyyy-mm-dd"></div></div></form>',
+                buttons: {
+                    success: {
+                        label: "Confirmar",
+                        className: "btn-success",
+                        callback: function() {
+                            $el.removeClass('btn-danger');
+                            $el.addClass('btn-success');
+                            $el.html('Pago');
+                            model.set('data_pago',$('.date-picker-boot').val());
+                            model.set('pago',1);
+
+                            model.save();
+                        }
+                    },
+                },
+                danger: {
+                    label: "Cancelar",
+                    className: "btn-danger",
+                    callback: function() {
+                        ;
+                    }
+                },
+            });
+
+            $('.date-picker-boot').datepicker();
+        }
+        
     },
 
 

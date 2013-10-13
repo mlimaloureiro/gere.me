@@ -6,7 +6,9 @@ gereMe.Models.DespesasModel = Backbone.Model.extend({
 	urlRoot: serverURL + '/despesas',
 
 	url: function() {
-		return serverURL + '/despesas';
+		if(this.get('id') != undefined)
+			return serverURL + '/despesas/' + this.get('id');
+		else
+			return serverURL + '/despesas';
 	}
-
 });

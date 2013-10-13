@@ -22,8 +22,12 @@ window.gereMe = {
 
         /* to work with time intervals */
         this.currentTime = new Date();
+
         this.currentMonth = this.currentTime.getMonth() + 1;
         this.currentYear = this.currentTime.getFullYear();
+        this.currentDay = this.currentTime.getDate();
+
+        this.currentTimeString = this.currentYear + '-' + this.currentMonth + '-' + this.currentDay;
 
         this.prevMonthContainer = $("#gereMe_prevMonth");
         this.nextMonthContainer = $("#gereMe_nextMonth");
@@ -76,6 +80,10 @@ window.gereMe = {
         }
 
         this.currMonthContainer.html(this.stringifyTime(this.currentMonth) + ', ' + this.currentYear );
+
+
+        this.receitasList.fetch({reset:true});
+        this.despesasList.fetch({reset:true});
 
     },
 

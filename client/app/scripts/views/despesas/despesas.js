@@ -13,6 +13,9 @@ gereMe.Views.DespesasView = Backbone.View.extend({
         if(!this.loaded) {
 
             gereMe.despesasList.on('reset', this.render, this);
+            gereMe.despesasList.on('change', this.updateStats, this);
+            gereMe.despesasList.on('remove', this.resetTable,this);
+
             gereMe.despesasList.on('add', this.resetTable, this);
 
             gereMe.servicosList.on('add', this.renderServicos, this);
@@ -46,6 +49,8 @@ gereMe.Views.DespesasView = Backbone.View.extend({
 
             console.log('[DespesasList] Loaded.');
             
+        } else {
+            this.resetTable();
         }
     
         return this;
@@ -58,8 +63,13 @@ gereMe.Views.DespesasView = Backbone.View.extend({
         $('#despesas-stats-porpagar').html(parseFloat(estatisticas.porpagar).toFixed(2) + ' €');
         $('#despesas-stats-pago').html(parseFloat(estatisticas.pago).toFixed(2) + ' €');
 
-        $('#percentagem-despesas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
-        $('#percentagem-despesas').css('width', estatisticas.percentagempaga + '%');
+        if(!isNaN(estatisticas.percentagempaga)) {
+            $('#percentagem-despesas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
+            $('#percentagem-despesas').css('width', estatisticas.percentagempaga + '%');
+        } else { 
+            $('#percentagem-despesas-prog').attr('data-percent','0% pago');
+            $('#percentagem-despesas').css('width', '0%');
+        }
     },
 
     renderServicos: function() {
@@ -87,6 +97,10 @@ gereMe.Views.DespesasView = Backbone.View.extend({
 
                                     $el.off();
                                     $el.on('click',that.togglePago);
+
+                                    $remEl = $('.remove-despesa');
+                                    $remEl.off();
+                                    $remEl.on('click',that.removeDespesa);
                                 }
                             }
                         );
@@ -292,42 +306,56 @@ gereMe.Views.DespesasView = Backbone.View.extend({
 
     },
 
-    removeReceita:function() {
+    removeDespesa:function(evt) {
+        evt.preventDefault();
+        $el = $(evt.target).parent();
+        var modelID = $el.attr('data-id');
+        var model = gereMe.despesasList.get(modelID);
+
+        //gereMe.despesasList.remove(model);
+
+        model.destroy();
 
     },
 
     resetTable:function() {
-        console.log('reset table');
+        console.log('reset table despesas');
         this.oTable.fnClearTable();
         var that = this;
         gereMe.despesasList.each(function(r) {
 
-            td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
-            td2 = r.get('titulo');
-            td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
-            if(r.get('servico') != undefined)
-                td4 = r.get('servico')['titulo'];
-            else
-                td4 = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))}).get('titulo');
+            var testDate = new Date(r.get('data_limite'));
+            if(testDate.getMonth() + 1 == gereMe.currentMonth) {
 
-            td5 = r.get('data_limite');
+                td1 = '<label> <input type="checkbox" class="ace" id=" ' + r.get('id') + ' "/> <span class="lbl"></span> </label>';
+                td2 = r.get('titulo');
+                td3 = parseFloat(r.get('valor')).toFixed(2) + '€' ;
+                if(r.get('servico') != undefined)
+                    td4 = r.get('servico')['titulo'];
+                else
+                    td4 = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))}).get('titulo');
 
-            //console.log('cliente_id = ' + r.get('cliente_id'));
-            //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
+                td5 = r.get('data_limite');
 
-            if(r.get('pago') == 1)
-                aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago-despesa btn-success ' + r.get('id') + '_line_buttom">Pago</button>';
-            else
-                aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago-despesa btn-danger ' + r.get('id') + '_line_buttom">Por pagar</button>';
+                //console.log('cliente_id = ' + r.get('cliente_id'));
+                //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
 
-            td6 = aux;
-            td7 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="blue" href="#"><i class="icon-zoom-in bigger-130"></i></a><a class="green" href="#"><i class="icon-pencil bigger-130 "></i></a><a class="red" href="#"><i class="icon-trash bigger-130 remove-despesa"></i></a></div></td>';
+                if(r.get('pago') == 1)
+                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago-despesa btn-success ' + r.get('id') + '_line_buttom">Pago</button>';
+                else
+                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago-despesa btn-danger ' + r.get('id') + '_line_buttom">Por pagar</button>';
 
-            td8 = '<td style="display:none"></td>'
+                td6 = aux;
+                td7 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="red remove-despesa" href="#"  data-id = "' + r.id + '"><i class="icon-trash bigger-130"></i></a></div></td>';
 
-            that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
+                td8 = '<td style="display:none"></td>'
+
+                that.oTable.fnAddData([td1,td2,td3,td4,td5,td6,td7,td8]);
+            }
+
+            
         });
-
+        
         this.updateStats();
     },
 
@@ -341,16 +369,41 @@ gereMe.Views.DespesasView = Backbone.View.extend({
             $el.removeClass('btn-success');
             $el.addClass('btn-danger');
             $el.html('Por pagar');
+            model.set('data_pago',null);
             model.set('pago',0);
+            
+            model.save();
 
         } else {
-            $el.removeClass('btn-danger');
-            $el.addClass('btn-success');
-            $el.html('Pago');
-            model.set('pago',1);
-        }
 
-        this.updateStats();
+            bootbox.dialog({
+                message: '<form class="form-horizonal"><label class="control-label" for="form-field-1">Data de Pagamento</label><div class="controls"><div class="input"><input class="span2 date-picker-boot" value="' + gereMe.currentTimeString + '" data-date-format="yyyy-mm-dd"></div></div></form>',
+                buttons: {
+                    success: {
+                        label: "Confirmar",
+                        className: "btn-success",
+                        callback: function() {
+                            $el.removeClass('btn-danger');
+                            $el.addClass('btn-success');
+                            $el.html('Pago');
+                            model.set('data_pago',$('.date-picker-boot').val());
+                            model.set('pago',1);
+
+                            model.save();
+                        }
+                    },
+                },
+                danger: {
+                    label: "Cancelar",
+                    className: "btn-danger",
+                    callback: function() {
+                        ;
+                    }
+                },
+            });
+
+            $('.date-picker-boot').datepicker();
+        }
     },
 
 

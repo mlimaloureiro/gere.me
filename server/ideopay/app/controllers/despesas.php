@@ -15,8 +15,19 @@ class despesas extends \BaseController {
 
 	public function index()
 	{
-		$despesas = ReceitaOuDespesa::where('data_limite', '!=', '')->where('tipo','=',0)->orderBy('data_limite')->get();
-		return Response::json($despesas->toArray());
+		if(is_numeric(Input::get('y')) && is_numeric(Input::get('m'))) {
+			$lower = Input::get('y') . '-' . Input::get('m') . '-01';
+			$upper = Input::get('y') . '-' . Input::get('m') . '-31';
+
+			$receitas = ReceitaOuDespesa::where('data_limite', '<=', $upper)->where('data_limite', '>=', $lower)->where('tipo','=',0)->orderBy('data_limite')->get();
+			return Response::json($receitas->toArray());
+		} else {
+			$lower = date('Y') . '-' . date('m') . '-01';
+			$upper = date('Y') . '-' . date('m') . '-31';
+
+			$receitas = ReceitaOuDespesa::where('data_limite', '<=', $upper)->where('data_limite', '>=', $lower)->where('tipo','=',0)->orderBy('data_limite')->get();
+			return Response::json($receitas->toArray());
+		}
 	}
 
 	/**
@@ -105,7 +116,10 @@ class despesas extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$despesa = ReceitaOuDespesa::find($id);
+		$despesa->pago = Input::get('pago');
+		$despesa->data_pago = Input::get('data_pago');
+		$despesa->save();
 	}
 
 	/**
@@ -116,7 +130,8 @@ class despesas extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$despesa = ReceitaOuDespesa::find($id);
+		$despesa->delete();
 	}
 
 }

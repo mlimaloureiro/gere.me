@@ -3,6 +3,11 @@
 gereMe.Collections.DespesasCollection = Backbone.Collection.extend({
 
     model: gereMe.Models.DespesasModel,
-    url: serverURL + '/despesas'
-
+    url:function() {
+    	if(gereMe.currentYear != undefined && gereMe.currentMonth != undefined) {
+    		return serverURL + '/despesas?' + 'y=' + gereMe.currentYear + '&m=' + gereMe.currentMonth;
+    	} else {
+    		return serverURL + '/despesas';
+    	}
+    }
 });

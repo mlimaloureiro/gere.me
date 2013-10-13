@@ -230,7 +230,7 @@
 							</td>
 
 							<td>
-								<a href="#"><%= r.get('titulo') %></a>
+								<%= r.get('titulo') %>
 							</td>
 
 							<td><%= parseFloat(r.get('valor')).toFixed(2) %> €</td>
@@ -245,15 +245,11 @@
 
 							<td>
 								<div class="hidden-phone visible-desktop action-buttons">
-									<a class="blue" href="#">
-										<i class="icon-zoom-in bigger-130"></i>
-									</a>
-
-									<a class="green" href="#">
+									<!--<a class="green" href="#">
 										<i class="icon-pencil bigger-130 "></i>
-									</a>
+									</a>-->
 
-									<a class="red" href="#">
+									<a class="red remove-receita" href="#" data-id="<%= r.get('id') %>">
 										<i class="icon-trash bigger-130"></i>
 									</a>
 								</div>
