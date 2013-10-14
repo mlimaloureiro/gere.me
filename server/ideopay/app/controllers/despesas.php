@@ -47,10 +47,7 @@ class despesas extends \BaseController {
 	 */
 	public function store()
 	{
-		
-		$prestacoes = Input::get('prestacoes');
-		$automatico = Input::get('automatico');
-		$prontoPagamento = Input::get('pronto_pagamento');
+
 		$currDate = date('Y-m-d');
 
 		$despesa = new ReceitaOuDespesa();
@@ -61,24 +58,8 @@ class despesas extends \BaseController {
 		$despesa->valor = Input::get('valor');
 		$despesa->descricao = '';
 		$despesa->tipo = 0;
-
-
-
-		if($prestacoes == 1) {
-
-			$mes = Input::get('mes');
-
-			$despesa->data_limite = date('Y-m-d',strtotime('+'. $mes . ' month'));
-		} else {
-			$despesa->data_limite = date('Y-m-d',strtotime(Input::get('data_limite')));
-		}
-
-		if($automatico == 1) {
-			$despesa->pago = 1;
-			$despesa->data_pago = $despesa->data_limite;
-		} else {
-			$despesa->pago = 0;
-		}
+		$despesa->pago = Input::get('pago');
+		$despesa->data_limite = date('Y-m-d',strtotime(Input::get('data_limite')));
 		
 		$despesa->save();
 	

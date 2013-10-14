@@ -80,6 +80,9 @@ gereMe.Views.DespesasView = Backbone.View.extend({
         });
 
         el.html(options);
+
+        $(".chosen-select-servicos-desp").chosen(); 
+        $('.chosen-container').css('width',300);
     },
 
     initHook: function() {
@@ -105,36 +108,12 @@ gereMe.Views.DespesasView = Backbone.View.extend({
                             }
                         );
 
-
-        /* form */ 
-        $('#recorrente-check-box-despesas').on('click', function(e) {
-            var that = $(this);
-            if (that.is (':checked')) {
-                $('.limite-form').hide();
-                $('.pronto_check').attr('checked', false);
-                $('.recorrente-form').show();
-            } else {
-                $('.recorrente-form').hide();
-
-                $('.limite-form').show();
-            }
-        });
-
-        //$('#despesa-form-inputs').submit(this.criaDespesa);
-
         $('#despesa-form-inputs').submit(this.criaDespesa);
 
         /* init datepicker */
 
         $('.date-picker').datepicker();
-
-        // dinam add row on table
-        //oTable1.fnAddData(['ola','ola','ola','ola','ola','ola','ola']);
-
-        //$('.toggle-pago-despesa').on('click',this.togglePago);
-
         
-
         $('.toggle-nova-despesa').on('click',function() {
             $('#nova-despesa-form').toggle();
         });
@@ -191,119 +170,36 @@ gereMe.Views.DespesasView = Backbone.View.extend({
         var titulo = $('input[name=titulo]').val();
         var servico_id = $('select[name=servico_id]').val();
         var valor = $('input[name=valor]').val();
-        var prestacoes = $('#recorrente-check-box-despesas').is(':checked');
-        var automatico = $('#automatico-check-despesas').is(':checked');
-        var pronto_pagamento = $('#pronto-check-despesas').is(':checked');
         var data_limite = $('input[name=data_limite]').val();
-        var meses = $('select[name=meses]').val();
 
-        /*
-        console.log('titulo: ' + titulo);
-        console.log('servico: ' + servico_id);
-        console.log('cliente: ' + cliente_id);
-        console.log('valor: ' + valor);
-        console.log('prestacoes: ' + prestacoes);
-        console.log('automatico: ' + automatico);
-        console.log('pronto_pagamento: ' + pronto_pagamento);
-        console.log('data_limite: ' + data_limite);
-        console.log('meses: ' + meses);
-        */
+        var obj =   {   'user_id':1,
+                        'servico_id':servico_id,
+                        'valor': valor,
+                        'titulo': titulo,
+                        'data_limite' : data_limite,
+                        'pago' : 0   
+                    };
 
-        var models = [];
+        model = new gereMe.Models.DespesasModel();
+        model.save(obj,{
+                success: function(model,response) {
+                    
+                    model.set('id',response.model.id);
+                    model.set('data_limite',response.model.data_limite);
 
-        // var para contar quantos model saves foram feitos
-        // para saber quando devemos fazer resetTables;
-        var countPrestacoes = 0;
+                    /* limpa o os dados recebido do request */
+                    model.unset('model');
+                    model.unset('error');
+                    model.unset('message');
 
-        if(prestacoes) {
-
-            var valorDaPrestacao = valor / meses;
-
-            for(var i = 1; i <= meses; i++) {
-                pago = automatico ? 1 : 0; 
-                automatico = automatico ? 1 : 0;
-
-                var obj =   {   'user_id':1,
-                                'servico_id':servico_id,
-                                'valor': valorDaPrestacao,
-                                'titulo': i + 'ª prest. ' + titulo,
-                                'prestacoes' : 1,
-                                'automatico' : automatico,
-                                'mes':i,
-                                'pago' : pago   
-                            };
-
-                model = new gereMe.Models.DespesasModel();
-                model.save(obj,{
-                    success: function(model,response) {
-                        model.set('id',response.model.id);
-                        model.set('data_limite',response.model.data_limite);
-                        
-                        if(response.model.data_pago != undefined)
-                            model.set('data_pago', response.model.data_pago);
-
-                        /* limpa o os dados recebido do request */
-                        model.unset('model');
-                        model.unset('error');
-                        model.unset('message');
-                        model.unset('prestacoes');
-                        model.unset('pronto_pagamento');
-
-                        countPrestacoes++;
-
-                        if(countPrestacoes == meses) {
-                            gereMe.despesasModel.add(model);
-                        } else {
-                            gereMe.despesasModel.add(model,{silent:true});
-                        } 
-                    }
-                });
-
-            }
-
-        } else {
-            pronto_pagamento = pronto_pagamento ? 1 : 0;
-            pago = pronto_pagamento;
-
-            var obj =   {   'user_id':1,
-                            'servico_id':servico_id,
-                            'valor': valor,
-                            'titulo': titulo,
-                            'prestacoes' : 0,
-                            'automatico' : automatico,
-                            'data_limite' : data_limite,
-                            'pronto_pagamento': pronto_pagamento,
-                            'pago' : pago   
-                        };
-
-            model = new gereMe.Models.DespesasModel();
-            model.save(obj,{
-                    success: function(model,response) {
-                        
-                        model.set('id',response.model.id);
-                        model.set('data_limite',response.model.data_limite);
-                        
-                        if(response.model.data_pago != undefined)
-                            model.set('data_pago', response.model.data_pago);
-
-                        /* limpa o os dados recebido do request */
-                        model.unset('model');
-                        model.unset('error');
-                        model.unset('message');
-                        model.unset('prestacoes');
-                        model.unset('pronto_pagamento');
-
-                        gereMe.despesasList.add(model);
-                    }
-                });
-        }
-
+                    gereMe.despesasList.add(model);
+                }
+            });
+        
         $('#nova-despesa-form').hide();
         $('#despesa-form-inputs').each(function() {
             this.reset();
         });
- 
-
     },
 
     removeDespesa:function(evt) {
@@ -348,9 +244,7 @@ gereMe.Views.DespesasView = Backbone.View.extend({
                 td7 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="red remove-despesa" href="#"  data-id = "' + r.id + '"><i class="icon-trash bigger-130"></i></a></div></td>';
 
                 that.oTable.fnAddData([td2,td3,td4,td5,td6,td7]);
-            }
-
-            
+            }    
         });
         
         this.updateStats();
@@ -402,7 +296,5 @@ gereMe.Views.DespesasView = Backbone.View.extend({
             $('.date-picker-boot').datepicker();
         }
     },
-
-
 
 });

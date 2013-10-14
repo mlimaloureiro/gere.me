@@ -84,7 +84,7 @@
 							<label class="control-label" for="form-field-1">Serviço</label>
 
 							<div class="controls">
-								<select id="despesas-servicos-select" name="servico_id">
+								<select id="despesas-servicos-select" class="chosen-select-servicos-desp" name="servico_id">
 																			
 								</select>
 							</div>
@@ -100,64 +100,19 @@
 							
 							<p></p>
 
-							<label class="control-label">Prestações</label>
-
+							<label class="control-label" for="form-field-1">Data Limite</label>
+							
 							<div class="controls">
-								<label>
-									<input name="recorrente-check" id="recorrente-check-box-despesas" type="checkbox" class="ace">
-									<span class="lbl"> Sim</span>
-								</label>
+								<div class="input-append">
+									<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" data-date-format="yyyy-mm-dd">
+									<span class="add-on">
+										<i class="icon-calendar"></i>
+									</span>
+								</div>
 							</div>
 
 							<p></p>
-							<div class="limite-form">
 
-								<label class="control-label" for="form-field-1">Pronto Pagamento</label>
-								<div class="controls">
-									<label>
-										<input name="pronto_check" id="pronto-check-despesas" type="checkbox" class="ace pronto_check">
-										<span class="lbl"> Sim</span>
-									</label>
-								</div>
-								<p></p>
-								<label class="control-label" for="form-field-1">Data Limite</label>
-								
-								<div class="controls">
-									<div class="input-append">
-										<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" data-date-format="yyyy-mm-dd">
-										<span class="add-on">
-											<i class="icon-calendar"></i>
-										</span>
-									</div>
-								</div>
-								<p></p>
-							</div>
-							<div class="recorrente-form" style="display:none">
-								<div class="control-group">
-									<label class="control-label" for="form-field-1">Meses</label>
-
-									<div class="controls">
-									<select class="select" name="meses" class="span2">
-										<% for(var i = 2; i < 25; i++) { %>
-											<option value="<%= i %>"><%= i %></option>
-										<% } %>
-									</select>
-								</div>
-
-
-								</div>
-							</div>
-							<p></p>
-
-							<label class="control-label">Pagamento Automatico</label>
-
-							<div class="controls">
-								<label>
-									<input name="automatico-check" id="automatico-check-despesas" name="automatico" type="checkbox" class="ace">
-									<span class="lbl"> Sim</span>
-								</label>
-							</div>
-							<p></p>
 							<div class="form-actions center" style="padding:10px 20px 10px">
 								<input type="submit" value="Confirmar" class="btn btn-small btn-success"></input>
 							</div>
@@ -204,8 +159,6 @@
 
 						<% despesas.each(function(r) { %>
 						<tr>
-							
-
 							<td> 
 								<%= r.get('titulo') %>
 							</td>

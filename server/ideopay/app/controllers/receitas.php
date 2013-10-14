@@ -43,9 +43,6 @@ class receitas extends \BaseController {
 	public function store()
 	{
 		
-		$prestacoes = Input::get('prestacoes');
-		$automatico = Input::get('automatico');
-		$prontoPagamento = Input::get('pronto_pagamento');
 		$currDate = date('Y-m-d');
 
 		$receita = new ReceitaOuDespesa();
@@ -56,7 +53,7 @@ class receitas extends \BaseController {
 		$receita->valor = Input::get('valor');
 		$receita->descricao = '';
 		$receita->tipo = 1;
-
+		$receita->pago = Input::get('pago');
 
 		if($receita->cliente_id == 'create') {
 			$novoCliente = new Cliente();
@@ -65,23 +62,7 @@ class receitas extends \BaseController {
 			$receita->cliente_id = $novoCliente->id;
 		}
 
-
-		if($prestacoes == 1) {
-
-			$mes = Input::get('mes');
-
-			$receita->data_limite = date('Y-m-d',strtotime('+'. $mes . ' month'));
-		} else {
-			$receita->data_limite = date('Y-m-d',strtotime(Input::get('data_limite')));
-		}
-
-		if($automatico == 1) {
-			$receita->pago = 1;
-			$receita->data_pago = $receita->data_limite;
-		} else {
-			$receita->pago = 0;
-		}
-		
+		$receita->data_limite = date('Y-m-d',strtotime(Input::get('data_limite')));		
 		$receita->save();
 
 		if(Input::get('cliente_id') == 'create') {

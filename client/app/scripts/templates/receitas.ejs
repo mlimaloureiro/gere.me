@@ -84,7 +84,7 @@
 							<label class="control-label" for="form-field-1">Serviço</label>
 
 							<div class="controls">
-								<select id="receitas-servicos-select" name="servico_id">
+								<select id="receitas-servicos-select" class="chosen-select-servicos" name="servico_id">
 																			
 								</select>
 							</div>
@@ -93,7 +93,7 @@
 							<label class="control-label" for="form-field-1">Cliente</label>
 
 							<div class="controls">
-								<select id="receitas-clientes-select" name="cliente_id">
+								<select id="receitas-clientes-select" class="chosen-select-clientes" name="cliente_id">
 																						
 								</select>
 							</div>
@@ -115,70 +115,20 @@
 							<div class="controls">
 								<input type="text" id="form-field-1" class="span6" name="valor" placeholder="Indique o valor a receber.">
 							</div>
+		
+							<p></p>
+
+							<label class="control-label" for="form-field-1">Data Limite</label>
 							
-							<p></p>
-
-							<label class="control-label">Prestações</label>
-
 							<div class="controls">
-								<label>
-									<input name="recorrente-check" id="recorrente-check-box" type="checkbox" class="ace">
-									<span class="lbl"> Sim</span>
-								</label>
-							</div>
-
-							<p></p>
-							<div class="limite-form">
-
-								<label class="control-label" for="form-field-1">Pronto Pagamento</label>
-								<div class="controls">
-									<label>
-										<input name="pronto_check" id="pronto-check" type="checkbox" class="ace pronto_check">
-										<span class="lbl"> Sim</span>
-									</label>
-								</div>
-								<p></p>
-								<label class="control-label" for="form-field-1">Data Limite</label>
-								
-								<div class="controls">
-									<div class="input-append">
-										<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" data-date-format="yyyy-mm-dd">
-										<span class="add-on">
-											<i class="icon-calendar"></i>
-										</span>
-									</div>
-								</div>
-								<p></p>
-							</div>
-							<div class="recorrente-form" style="display:none">
-								<div class="control-group">
-									<label class="control-label" for="form-field-1">Meses</label>
-
-									<div class="controls">
-									<select class="select" name="meses" class="span2">
-										<option value="2">2</option>	
-										<option value="3">3</option>
-										<option value="4">4</option>	
-										<option value="5">5</option>
-										<option value="6">6</option>
-										<option value="7">7</option>
-										<option value="8">8</option>
-									</select>
-								</div>
-
-
+								<div class="input-append">
+									<input class="span6 date-picker" id="id-date-picker-1" type="text" name="data_limite" value="<%= gereMe.currentTimeString %>" data-date-format="yyyy-mm-dd">
+									<span class="add-on">
+										<i class="icon-calendar"></i>
+									</span>
 								</div>
 							</div>
-							<p></p>
 
-							<label class="control-label">Pagamento Automatico</label>
-
-							<div class="controls">
-								<label>
-									<input name="automatico-check" id="automatico-check" name="automatico" type="checkbox" class="ace">
-									<span class="lbl"> Sim</span>
-								</label>
-							</div>
 							<p></p>
 							<div class="form-actions center" style="padding:10px 20px 10px">
 								<input type="submit" value="Confirmar" class="btn btn-small btn-success"></input>
