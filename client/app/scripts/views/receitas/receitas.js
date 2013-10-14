@@ -17,7 +17,6 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
             gereMe.receitasList.on('add', this.resetTable, this);
             gereMe.receitasList.on('remove', this.resetTable,this);
 
-
             gereMe.servicosList.on('add', this.renderServicos, this);
             gereMe.servicosList.on('remove', this.renderServicos, this);
 
@@ -36,7 +35,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                 var servico = [];
                 var cliente = [];
                 var aux = gereMe.servicosList.findWhere({'id':parseInt(r.get('servico_id'))});
-                var aux2 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))})
+                var aux2 = gereMe.clientesList.findWhere({'id':parseInt(r.get('cliente_id'))});
                 servico['titulo'] = aux.get('titulo');
                 servico['id'] = aux.get('id');
                 cliente['nome'] = aux2.get('nome');
@@ -105,7 +104,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         el.html(options);
 
         $(".chosen-select-clientes").chosen(); 
-        $('.chosen-container').css('width',300);
+        $('.chosen-container').css('width',400);
 
     },
 
@@ -119,7 +118,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         el.html(options);
 
         $(".chosen-select-servicos").chosen(); 
-        $('.chosen-container').css('width',300);
+        $('.chosen-container').css('width',400);
 
 
     },

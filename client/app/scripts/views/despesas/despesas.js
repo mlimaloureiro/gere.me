@@ -15,7 +15,6 @@ gereMe.Views.DespesasView = Backbone.View.extend({
             gereMe.despesasList.on('reset', this.render, this);
             gereMe.despesasList.on('change', this.updateStats, this);
             gereMe.despesasList.on('remove', this.resetTable,this);
-
             gereMe.despesasList.on('add', this.resetTable, this);
 
             gereMe.servicosList.on('add', this.renderServicos, this);
@@ -82,7 +81,7 @@ gereMe.Views.DespesasView = Backbone.View.extend({
         el.html(options);
 
         $(".chosen-select-servicos-desp").chosen(); 
-        $('.chosen-container').css('width',300);
+        $('.chosen-container').css('width',400);
     },
 
     initHook: function() {
