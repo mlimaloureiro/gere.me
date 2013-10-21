@@ -13,3 +13,13 @@ gereMe.Collections.ReceitasCollection = Backbone.Collection.extend({
     }
 
 });
+
+gereMe.Collections.PorReceberCollection = Backbone.Collection.extend({
+
+    model: gereMe.Models.ReceitasModel,
+
+    url:function() {
+    	return serverURL + '/receitas?pp=1';
+    }
+
+});

@@ -19,6 +19,8 @@ window.gereMe = {
         this.clientesList = new gereMe.Collections.ClientesCollection();
         this.servicosList = new gereMe.Collections.ServicosCollection();
         this.despesasList = new gereMe.Collections.DespesasCollection();
+        this.porReceberList = new gereMe.Collections.PorReceberCollection();
+
 
         /* to work with time intervals */
         this.currentTime = new Date();

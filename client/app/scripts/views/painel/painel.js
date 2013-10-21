@@ -29,8 +29,6 @@ gereMe.Views.PainelView = Backbone.View.extend({
     render: function() {
         if(!this.loaded) {
             $('#page').append(this.template());
-            this.recente = new gereMe.Views.RecenteView();
-            this.piechart = new gereMe.Views.PiechartView();
             this.insercaorapida = new gereMe.Views.InsercaorapidaView();
         }
 

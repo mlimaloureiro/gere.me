@@ -46,6 +46,10 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
 
             $('#page').append(this.template({receitas:gereMe.receitasList}));
 
+
+            this.recente = new gereMe.Views.RecenteView();
+            //this.piechart = new gereMe.Views.PiechartView();
+
             this.renderClientes();
             this.renderServicos();
             this.updateStats();
@@ -71,11 +75,10 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         $('#receitas-stats-pago').html(parseFloat(estatisticas.pago).toFixed(2) + ' €');
 
         if(!isNaN(estatisticas.percentagempaga)) {
-            console.log('actualiza percentagem paga com ' + estatisticas.percentagempaga);
-            $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% pago');
+            $('#percentagem-receitas-prog').attr('data-percent', estatisticas.percentagempaga + '% recebido');
             $('#percentagem-receitas').css('width', estatisticas.percentagempaga + '%');
         } else { 
-            $('#percentagem-receitas-prog').attr('data-percent','0% pago');
+            $('#percentagem-receitas-prog').attr('data-percent','0% recebido');
             $('#percentagem-receitas').css('width', '0%');
         }
     },
@@ -295,9 +298,9 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                 //console.log(gereMe.clientesList.where({'id':r.get('cliente_id')}));
 
                 if(r.get('pago') == 1)
-                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-success ' + r.get('id') + '_line_buttom">Pago</button>';
+                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-success ' + r.get('id') + '_line_buttom">Recebido</button>';
                 else
-                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-danger ' + r.get('id') + '_line_buttom">Por pagar</button>';
+                    aux = '<button data-id = "' + r.id + '" class="btn btn-minier toggle-pago btn-danger ' + r.get('id') + '_line_buttom">Por receber</button>';
 
                 td7 = aux;
                 td8 = '<td><div class="hidden-phone visible-desktop action-buttons"><a class="red remove-receita" href="#"  data-id = "' + r.id + '"><i class="icon-trash bigger-130"></i></a></div></td>';
@@ -318,7 +321,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
         if($el.hasClass('btn-success')) {
             $el.removeClass('btn-success');
             $el.addClass('btn-danger');
-            $el.html('Por pagar');
+            $el.html('Por receber');
             model.set('data_pago',null);
             model.set('pago',0);
             
@@ -335,7 +338,7 @@ gereMe.Views.ReceitasView = Backbone.View.extend({
                         callback: function() {
                             $el.removeClass('btn-danger');
                             $el.addClass('btn-success');
-                            $el.html('Pago');
+                            $el.html('Recebido');
                             model.set('data_pago',$('.date-picker-boot').val());
                             model.set('pago',1);
 

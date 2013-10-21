@@ -10,19 +10,31 @@ class receitas extends \BaseController {
 	public function index()
 	{
 
-		if(is_numeric(Input::get('y')) && is_numeric(Input::get('m'))) {
-			$lower = Input::get('y') . '-' . Input::get('m') . '-01';
-			$upper = Input::get('y') . '-' . Input::get('m') . '-31';
+		/* TODO: criar query builder em vez de estar a criar uma para cada */
 
-			$receitas = ReceitaOuDespesa::where('data_limite', '<=', $upper)->where('data_limite', '>=', $lower)->where('tipo','=',1)->orderBy('data_limite')->get();
-			return Response::json($receitas->toArray());
+
+		if(Input::get('y') && Input::get('m')) {
+
+			if(is_numeric(Input::get('y')) && is_numeric(Input::get('m'))) {
+				$lower = Input::get('y') . '-' . Input::get('m') . '-01';
+				$upper = Input::get('y') . '-' . Input::get('m') . '-31';
+
+				$receitas = ReceitaOuDespesa::where('data_limite', '<=', $upper)->where('data_limite', '>=', $lower)->where('tipo','=',1)->orderBy('data_limite')->get();
+			} else {
+				$lower = date('Y') . '-' . date('m') . '-01';
+				$upper = date('Y') . '-' . date('m') . '-31';
+
+				$receitas = ReceitaOuDespesa::where('data_limite', '<=', $upper)->where('data_limite', '>=', $lower)->where('tipo','=',1)->orderBy('data_limite')->get();
+			}
+		} else if(Input::get('pp') && is_numeric(Input::get('pp'))) { // vai buscar todas as receitas sem time window
+			if(Input::get('pp') == 1) { // se por pagar = 1
+				$receitas = ReceitaOuDespesa::where('pago', '=', 0)->where('tipo','=',1)->orderBy('data_limite')->get(); 
+			} 
 		} else {
-			$lower = date('Y') . '-' . date('m') . '-01';
-			$upper = date('Y') . '-' . date('m') . '-31';
-
-			$receitas = ReceitaOuDespesa::where('data_limite', '<=', $upper)->where('data_limite', '>=', $lower)->where('tipo','=',1)->orderBy('data_limite')->get();
-			return Response::json($receitas->toArray());
+			$receitas = ReceitaOuDespesa::orderBy('data_limite')->get(); 
 		}
+
+		return Response::json($receitas->toArray());
 	}
 
 	/**

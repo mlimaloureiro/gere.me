@@ -14,3 +14,6 @@ gereMe.Models.ReceitasModel = Backbone.Model.extend({
 	//url: serverURL + '/receitas/'
 
 });
+
+
+
